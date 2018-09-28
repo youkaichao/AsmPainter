@@ -1,0 +1,6 @@
+*.lst
+*.sdf
+*.user
+.vs/
+Debug/
+Release/
