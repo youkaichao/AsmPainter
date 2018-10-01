@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="function.asm" />
     <MASM Include="main.asm" />
   </ItemGroup>
   <ItemGroup>
