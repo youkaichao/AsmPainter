@@ -7,9 +7,10 @@ include function.inc
 .code 
 
 WinMain proc hInst:HINSTANCE,hPrevInst:HINSTANCE,CmdLine:LPSTR,CmdShow:DWORD 
-    LOCAL wc:WNDCLASSEX 
-    LOCAL msg:MSG 
-    LOCAL hwnd:HWND 
+    local wc:WNDCLASSEX 
+    local msg:MSG 
+    local hwnd:HWND
+    local hbutton:HWND
     mov   wc.cbSize,SIZEOF WNDCLASSEX 
     mov   wc.style, CS_HREDRAW or CS_VREDRAW 
     mov   wc.lpfnWndProc, OFFSET WndProc 
@@ -19,21 +20,24 @@ WinMain proc hInst:HINSTANCE,hPrevInst:HINSTANCE,CmdLine:LPSTR,CmdShow:DWORD
     pop   wc.hInstance 
     mov   wc.hbrBackground,COLOR_WINDOW+1 
     mov   wc.lpszMenuName,NULL 
-    mov   wc.lpszClassName,OFFSET ClassName 
+    mov   wc.lpszClassName,OFFSET WindowClass 
     invoke LoadIcon,NULL,IDI_APPLICATION 
     mov   wc.hIcon,eax 
     mov   wc.hIconSm,eax 
     invoke LoadCursor,NULL,IDC_ARROW 
     mov   wc.hCursor,eax 
     invoke RegisterClassEx, addr wc 
-    invoke CreateWindowEx,NULL,ADDR ClassName,ADDR AppName,WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,NULL,NULL,hInst,NULL 
+    invoke CreateWindowEx,0,addr WindowClass,addr WindowName,WS_OVERLAPPEDWINDOW and not WS_MAXIMIZEBOX and not WS_THICKFRAME,0,0,1200,800,0,0,hInst,0 
     mov   hwnd,eax 
-    invoke ShowWindow, hwnd,SW_SHOWNORMAL 
-    invoke UpdateWindow, hwnd 
+    invoke CreateWindowEx,0,addr ButtonClass,addr PencilName,WS_CHILD or WS_VISIBLE,0,0,100,100,hwnd,PencilID,hInst,0
+    invoke CreateWindowEx,0,addr ButtonClass,addr EraserName,WS_CHILD or WS_VISIBLE,0,100,100,100,hwnd,EraserID,hInst,0
+    mov   hbutton,eax
+    invoke ShowWindow,hwnd,SW_SHOWNORMAL 
+    invoke UpdateWindow,hwnd
     .WHILE TRUE 
-        invoke GetMessage, ADDR msg,NULL,0,0 
+        invoke GetMessage, addr msg,NULL,0,0 
         .BREAK .IF (!eax) 
-        invoke DispatchMessage, ADDR msg 
+        invoke DispatchMessage, addr msg 
     .ENDW 
     mov     eax,msg.wParam 
     ret 
@@ -50,6 +54,8 @@ WndProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
         invoke MouseMove,hWnd,wParam,lParam
     .ELSEIF uMsg==WM_PAINT
         invoke Render,hWnd
+    .ELSEIF uMsg==WM_COMMAND
+        invoke HandleCommand,hWnd,wParam
     .ELSE 
         invoke DefWindowProc,hWnd,uMsg,wParam,lParam 
         ret 
@@ -62,7 +68,7 @@ start:
     invoke GetModuleHandle, NULL 
     mov    hInstance,eax 
     invoke GetCommandLine
-    mov CommandLine,eax 
-    invoke WinMain, hInstance,NULL,CommandLine, SW_SHOWDEFAULT 
+    mov commandLine,eax 
+    invoke WinMain, hInstance,NULL,commandLine, SW_SHOWDEFAULT 
     invoke ExitProcess,eax
 end start 
