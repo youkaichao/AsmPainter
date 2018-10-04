@@ -61,7 +61,7 @@ MouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     ret
 MouseMove endp
 
-HandleCommand proc hWnd:HWND,wParam:WPARAM
+HandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     mov ebx,wParam
     .IF ebx==PencilID
         mov eax,PencilID

@@ -8,11 +8,15 @@ includelib kernel32.lib
 includelib gdi32.lib
 includelib msvcrt.lib
 
-Render proto :DWORD
-LButtonDown proto :DWORD,:DWORD,:DWORD
-LButtonUp proto :DWORD,:DWORD,:DWORD
-MouseMove proto :DWORD,:DWORD,:DWORD
-HandleCommand proto :DWORD,:DWORD
+CreateWindowClass proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH
+CanvasProc proto :HWND,:UINT,:WPARAM,:LPARAM
+WindowProc proto :HWND,:UINT,:WPARAM,:LPARAM
+
+Render proto :HWND
+LButtonDown proto :HWND,:WPARAM,:LPARAM
+LButtonUp proto :HWND,:WPARAM,:LPARAM
+MouseMove proto :HWND,:WPARAM,:LPARAM
+HandleCommand proto :HWND,:WPARAM,:LPARAM
 
 RGB macro red,green,blue 
     xor eax,eax 
@@ -24,8 +28,9 @@ endm
 
 .data
 
-    WindowClass byte "WindowClass",0 
-    ButtonClass byte "button",0
+    WindowClass byte "WindowClass",0
+    CanvasClass byte "CanvasClass",0
+    ButtonClass byte "Button",0
     WindowName  byte "AsmPainter",0
     PencilName byte "Pencil",0
     EraserName byte "Eraser",0
