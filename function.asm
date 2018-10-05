@@ -38,7 +38,23 @@ MouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     local hpen:HPEN
     local position:POINT
     local bitmap:HBITMAP
+
+    mov eax,lParam 
+    and eax,0FFFFh 
+    mov position.x,eax 
+    mov eax,lParam 
+    shr eax,16 
+    mov position.y,eax
+
     .IF !mouseClick
+        ret
+    .ENDIF
+    .IF mouseBlur
+        mov mouseBlur,FALSE
+        push position.x
+        push position.y
+        pop mousePosition.y
+        pop mousePosition.x
         ret
     .ENDIF
     invoke GetDC,hWnd
@@ -60,12 +76,6 @@ MouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     .ENDIF
     mov hpen,eax
     invoke SelectObject,buffer,hpen
-    mov eax,lParam 
-    and eax,0FFFFh 
-    mov position.x,eax 
-    mov eax,lParam 
-    shr eax,16 
-    mov position.y,eax
     push position.x
     push position.y
     invoke MoveToEx,buffer,mousePosition.x,mousePosition.y,0
@@ -75,8 +85,24 @@ MouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     invoke ReleaseDC,hWnd,hdc
     invoke InvalidateRect,hWnd,0,FALSE
     invoke UpdateWindow,hWnd
+    invoke SetTrack,hWnd
     ret
 MouseMove endp
+
+SetTrack proc hWnd:HWND
+    local event:TRACKMOUSEEVENT
+    mov  event.cbSize,SIZEOF TRACKMOUSEEVENT
+    mov  event.dwFlags,TME_LEAVE
+    push hWnd
+    pop  event.hwndTrack
+    invoke TrackMouseEvent,addr event
+    ret
+SetTrack endp
+
+MouseLeave proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
+    mov mouseBlur,TRUE
+    ret
+MouseLeave endp
 
 HandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     mov ebx,wParam

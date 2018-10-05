@@ -54,6 +54,8 @@ CanvasProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
         invoke MouseMove,hWnd,wParam,lParam
     .ELSEIF uMsg==WM_PAINT
         invoke Render,hWnd
+    .ELSEIF uMsg==WM_MOUSELEAVE
+        invoke MouseLeave,hWnd,wParam,lParam 
     .ELSE 
         invoke DefWindowProc,hWnd,uMsg,wParam,lParam 
         ret 

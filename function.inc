@@ -16,7 +16,9 @@ Render proto :HWND
 LButtonDown proto :HWND,:WPARAM,:LPARAM
 LButtonUp proto :HWND,:WPARAM,:LPARAM
 MouseMove proto :HWND,:WPARAM,:LPARAM
+SetTrack proto :HWND
 HandleCommand proto :HWND,:WPARAM,:LPARAM
+MouseLeave proto :HWND,:WPARAM,:LPARAM
 
 RGB macro red,green,blue 
     xor eax,eax 
@@ -39,6 +41,7 @@ endm
     EraserID dword 1001
 
     mouseClick dword 0
+    mouseBlur dword 0
     instruction dword 1000
 
 .data?
