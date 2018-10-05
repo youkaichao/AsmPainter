@@ -45,3 +45,4 @@ endm
     mousePosition POINT <?,?>
     hInstance HINSTANCE ? 
     commandLine LPSTR ?
+    buffer HDC ?
