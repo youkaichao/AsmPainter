@@ -16,7 +16,9 @@ Render proto :HWND
 LButtonDown proto :HWND,:WPARAM,:LPARAM
 LButtonUp proto :HWND,:WPARAM,:LPARAM
 MouseMove proto :HWND,:WPARAM,:LPARAM
+SetTrack proto :HWND
 HandleCommand proto :HWND,:WPARAM,:LPARAM
+MouseLeave proto :HWND,:WPARAM,:LPARAM
 
 RGB macro red,green,blue 
     xor eax,eax 
@@ -24,6 +26,11 @@ RGB macro red,green,blue
     shl eax,8 
     mov ah,green 
     mov al,red 
+endm
+
+MAKEINTRESOURCE macro id
+    mov eax,id
+    and eax,0ffffh
 endm
 
 .data
@@ -34,11 +41,13 @@ endm
     WindowName  byte "AsmPainter",0
     PencilName byte "Pencil",0
     EraserName byte "Eraser",0
+    AppIcon byte "app.ico",0
     NumberFormat byte "%d",13,10,0
     PencilID dword 1000
     EraserID dword 1001
 
     mouseClick dword 0
+    mouseBlur dword 0
     instruction dword 1000
 
 .data?
