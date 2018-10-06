@@ -91,11 +91,11 @@ MouseMove endp
 
 SetTrack proc hWnd:HWND
     local event:TRACKMOUSEEVENT
-		mov  event.cbSize,SIZEOF TRACKMOUSEEVENT
-		mov  event.dwFlags,TME_LEAVE
+    mov  event.cbSize,SIZEOF TRACKMOUSEEVENT
+    mov  event.dwFlags,TME_LEAVE
     push hWnd
-		pop  event.hwndTrack
-		invoke TrackMouseEvent,addr event
+    pop  event.hwndTrack
+    invoke TrackMouseEvent,addr event
     ret
 SetTrack endp
 
