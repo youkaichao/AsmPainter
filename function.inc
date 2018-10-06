@@ -28,6 +28,11 @@ RGB macro red,green,blue
     mov al,red 
 endm
 
+MAKEINTRESOURCE macro id
+    mov eax,id
+    and eax,0ffffh
+endm
+
 .data
 
     WindowClass byte "WindowClass",0
@@ -36,6 +41,7 @@ endm
     WindowName  byte "AsmPainter",0
     PencilName byte "Pencil",0
     EraserName byte "Eraser",0
+    AppIcon byte "app.ico",0
     NumberFormat byte "%d",13,10,0
     PencilID dword 1000
     EraserID dword 1001

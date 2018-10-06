@@ -21,7 +21,8 @@ CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HB
     mov   wc.lpszMenuName,NULL
     push  className
     pop   wc.lpszClassName
-    invoke LoadIcon,NULL,IDI_APPLICATION 
+    MAKEINTRESOURCE 10001
+    invoke LoadIcon,hInst,eax
     mov   wc.hIcon,eax 
     mov   wc.hIconSm,eax 
     invoke LoadCursor,NULL,IDC_ARROW 

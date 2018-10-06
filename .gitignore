@@ -1,6 +1,7 @@
 *.lst
 *.sdf
 *.user
+*.aps
 .vs/
 Debug/
 Release/
