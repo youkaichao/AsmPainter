@@ -125,16 +125,16 @@ FileOpenMenu proc hWnd:HWND
     mov buffer,eax
     invoke CreateCompatibleDC,hdc
     mov hdcBmp,eax
-    invoke CreateCompatibleBitmap,hdc,1100,800
+    invoke CreateCompatibleBitmap,hdc,1150,800
     mov hBmpBuffer,eax
     invoke SelectObject,buffer,hBmpBuffer
-    invoke BitBlt,buffer,0,0,1100,800,hdc,0,0,SRCCOPY
+    invoke BitBlt,buffer,0,0,1150,800,hdc,0,0,SRCCOPY
 
     mov  ofn.lStructSize,sizeof ofn
     mov  ofn.hwndOwner,NULL 
     push hInstance 
     pop  ofn.hInstance 
-    mov  ofn.lpstrFilter,OFFSET filterString 
+    mov  ofn.lpstrFilter,OFFSET FilterString 
     mov  ofn.lpstrFile,OFFSET fileNameBuffer 
     mov  ofn.nMaxFile,sizeof fileNameBuffer 
     mov  ofn.Flags,OFN_FILEMUSTEXIST or OFN_PATHMUSTEXIST
@@ -149,7 +149,7 @@ FileOpenMenu proc hWnd:HWND
 
     mov hBmp,HBITMAP PTR eax
     invoke SelectObject,hdcBmp,hBmp
-    invoke BitBlt,buffer,0,0,1100,800,hdcBmp,0,0,SRCCOPY
+    invoke BitBlt,buffer,0,0,1150,800,hdcBmp,0,0,SRCCOPY
     invoke InvalidateRect,hWndCanvas,0,FALSE
     invoke UpdateWindow,hWndCanvas
     invoke DeleteDC,hdcBmp

@@ -19,7 +19,9 @@
     <None Include="function.inc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="app.ico" />
+    <Image Include="res\app.ico" />
+    <Image Include="res\eraser.ico" />
+    <Image Include="res\pencil.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />

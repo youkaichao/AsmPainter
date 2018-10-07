@@ -38,25 +38,28 @@ endm
 
 .data
 
-    WindowClass byte "WindowClass",0
-    CanvasClass byte "CanvasClass",0
-    ButtonClass byte "Button",0
-    WindowName  byte "AsmPainter",0
-    PencilName byte "Pencil",0
-    EraserName byte "Eraser",0
-    AppIcon byte "app.ico",0
-    NumberFormat byte "%d",13,10,0
-    PencilID dword 1000
-    EraserID dword 1001
-    IDI_PAINTER dword 10001
-    ID_FILE_MENU dword 40003
-    ID_FILE_OPEN_MENU dword 40004
-    ID_FILE_SAVE_MENU dword 40005
+    WindowClass            byte          "WindowClass",0
+    CanvasClass            byte          "CanvasClass",0
+    ButtonClass            byte          "Button",0
+    WindowName             byte          "AsmPainter",0
+    PencilName             byte          "Pencil",0
+    EraserName             byte          "Eraser",0
+    AppIcon                byte          "app.ico",0
+    NumberFormat           byte          "%d",13,10,0
+    FilterString           byte          "BitMap(*.bmp)",0,"*.bmp",0
+    
+    PencilID               dword         1000
+    EraserID               dword         1001
+    IDI_PAINTER            dword         104
+    IDI_ERASER             dword         105
+    IDI_PENCIL             dword         106
+    ID_FILE_MENU           dword         40003
+    ID_FILE_OPEN_MENU      dword         40004
+    ID_FILE_SAVE_MENU      dword         40005
 
-    mouseClick dword 0
-    mouseBlur dword 0
-    instruction dword 1000
-    filterString BYTE 'BitMap(*.bmp)',0,'*.bmp',0
+    mouseClick             dword         0
+    mouseBlur              dword         0
+    instruction            dword         1000
 
 .data?
     mousePosition POINT <?,?>
