@@ -18,7 +18,7 @@ Render proc hWnd:HWND
     local ps:PAINTSTRUCT
     invoke BeginPaint,hWnd,addr ps
     mov hdc,eax
-    invoke BitBlt,hdc,0,0,1200,800,buffer,0,0,SRCCOPY
+    invoke BitBlt,hdc,0,0,WNDWIDTH,WNDHEIGHT,buffer,0,0,SRCCOPY
     invoke EndPaint,hWnd,addr ps
     ret
 Render endp
@@ -125,10 +125,10 @@ FileOpenMenu proc hWnd:HWND
     mov buffer,eax
     invoke CreateCompatibleDC,hdc
     mov hdcBmp,eax
-    invoke CreateCompatibleBitmap,hdc,1150,800
+    invoke CreateCompatibleBitmap,hdc,CANVASWIDTH,WNDHEIGHT
     mov hBmpBuffer,eax
     invoke SelectObject,buffer,hBmpBuffer
-    invoke BitBlt,buffer,0,0,1150,800,hdc,0,0,SRCCOPY
+    invoke BitBlt,buffer,0,0,CANVASWIDTH,WNDHEIGHT,hdc,0,0,SRCCOPY
 
     mov  ofn.lStructSize,sizeof ofn
     mov  ofn.hwndOwner,NULL 
@@ -149,7 +149,7 @@ FileOpenMenu proc hWnd:HWND
 
     mov hBmp,HBITMAP PTR eax
     invoke SelectObject,hdcBmp,hBmp
-    invoke BitBlt,buffer,0,0,1150,800,hdcBmp,0,0,SRCCOPY
+    invoke BitBlt,buffer,0,0,CANVASWIDTH,WNDHEIGHT,hdcBmp,0,0,SRCCOPY
     invoke InvalidateRect,hWndCanvas,0,FALSE
     invoke UpdateWindow,hWndCanvas
     invoke DeleteDC,hdcBmp

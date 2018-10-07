@@ -48,6 +48,13 @@ endm
     NumberFormat           byte          "%d",13,10,0
     FilterString           byte          "BitMap(*.bmp)",0,"*.bmp",0
     
+    WNDWIDTH               dword         1500
+    WNDHEIGHT              dword         1000
+    CANVASWIDTH            dword         1200
+    CANVASHEIGHT           dword         800
+    FUNCBTNSIZE            dword         50
+    COLRBTNSIZE            dword         25
+
     PencilID               dword         1000
     EraserID               dword         1001
     IDI_PAINTER            dword         104

@@ -18,19 +18,19 @@ WinMain proc hInst:HINSTANCE,hPrevInst:HINSTANCE,CmdLine:LPSTR,CmdShow:DWORD
     mov ebx,OFFSET CanvasProc
     invoke GetStockObject,WHITE_BRUSH
     invoke CreateWindowClass,hInst,ebx,addr CanvasClass,eax,0
-    invoke CreateWindowEx,0,addr WindowClass,addr WindowName,WS_OVERLAPPEDWINDOW and not WS_MAXIMIZEBOX and not WS_THICKFRAME,0,0,1200,800,0,0,hInst,0  
+    invoke CreateWindowEx,0,addr WindowClass,addr WindowName,WS_OVERLAPPEDWINDOW and not WS_MAXIMIZEBOX and not WS_THICKFRAME,0,0,WNDWIDTH,WNDHEIGHT,0,0,hInst,0  
     mov hWndMainWindow,eax
-    invoke CreateWindowEx,0,addr ButtonClass,addr PencilName,WS_CHILD or WS_VISIBLE or BS_DEFPUSHBUTTON or BS_ICON,0,0,50,50,hWndMainWindow,PencilID,hInst,0
+    invoke CreateWindowEx,0,addr ButtonClass,addr PencilName,WS_CHILD or WS_VISIBLE or BS_DEFPUSHBUTTON or BS_ICON,0,0,FUNCBTNSIZE,FUNCBTNSIZE,hWndMainWindow,PencilID,hInst,0
     mov hWndPencil,eax
     MAKEINTRESOURCE IDI_PENCIL
     invoke LoadIcon,hInst,eax
     invoke SendMessage,hWndPencil,BM_SETIMAGE,IMAGE_ICON,eax
-    invoke CreateWindowEx,0,addr ButtonClass,addr EraserName,WS_CHILD or WS_VISIBLE or BS_DEFPUSHBUTTON or BS_ICON,0,50,50,50,hWndMainWindow,EraserID,hInst,0
+    invoke CreateWindowEx,0,addr ButtonClass,addr EraserName,WS_CHILD or WS_VISIBLE or BS_DEFPUSHBUTTON or BS_ICON,0,FUNCBTNSIZE,FUNCBTNSIZE,FUNCBTNSIZE,hWndMainWindow,EraserID,hInst,0
     mov hWndEraser,eax
     MAKEINTRESOURCE IDI_ERASER
     invoke LoadIcon,hInst,eax
     invoke SendMessage,hWndEraser,BM_SETIMAGE,IMAGE_ICON,eax
-    invoke CreateWindowEx,0,addr CanvasClass,addr EraserName,WS_CHILD or WS_VISIBLE,50,0,1150,800,hWndMainWindow,0,hInst,0
+    invoke CreateWindowEx,0,addr CanvasClass,addr EraserName,WS_CHILD or WS_VISIBLE,FUNCBTNSIZE,0,CANVASWIDTH,CANVASHEIGHT,hWndMainWindow,0,hInst,0
     mov hWndCanvas,eax
     invoke ShowWindow,hWndMainWindow,SW_SHOWNORMAL 
     invoke UpdateWindow,hWndMainWindow
