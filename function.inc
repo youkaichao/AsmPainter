@@ -49,9 +49,9 @@ endm
     FilterString           byte          "BitMap(*.bmp)",0,"*.bmp",0
     
     WNDWIDTH               dword         1500
-    WNDHEIGHT              dword         1000
+    WNDHEIGHT              dword         850
     CANVASWIDTH            dword         1200
-    CANVASHEIGHT           dword         800
+    CANVASHEIGHT           dword         750
     FUNCBTNSIZE            dword         50
     COLRBTNSIZE            dword         25
 
