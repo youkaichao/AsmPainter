@@ -4,6 +4,13 @@ option casemap:none
 
 include function.inc
 
+public hWndMainWindow
+public hWndCanvas
+
+.data?
+    hWndMainWindow HWND ?
+    hWndCanvas HWND ?
+
 .code 
 
 Render proc hWnd:HWND
@@ -82,6 +89,7 @@ MouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     invoke LineTo,buffer,position.x,position.y
     pop mousePosition.y
     pop mousePosition.x
+    invoke DeleteObject,bitmap
     invoke ReleaseDC,hWnd,hdc
     invoke InvalidateRect,hWnd,0,FALSE
     invoke UpdateWindow,hWnd
@@ -91,7 +99,7 @@ MouseMove endp
 
 SetTrack proc hWnd:HWND
     local event:TRACKMOUSEEVENT
-    mov  event.cbSize,SIZEOF TRACKMOUSEEVENT
+    mov  event.cbSize,sizeof TRACKMOUSEEVENT
     mov  event.dwFlags,TME_LEAVE
     push hWnd
     pop  event.hwndTrack
@@ -104,14 +112,70 @@ MouseLeave proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     ret
 MouseLeave endp
 
+FileOpenMenu proc hWnd:HWND
+    local hdc:HDC
+    local hdcBmp:HDC
+    local hBmpBuffer:HBITMAP
+    local hBmp:HBITMAP
+    local rect:RECT
+    
+    invoke GetDC,hWndCanvas
+    mov hdc,eax
+    invoke CreateCompatibleDC,hdc
+    mov buffer,eax
+    invoke CreateCompatibleDC,hdc
+    mov hdcBmp,eax
+    invoke CreateCompatibleBitmap,hdc,1100,800
+    mov hBmpBuffer,eax
+    invoke SelectObject,buffer,hBmpBuffer
+    invoke BitBlt,buffer,0,0,1100,800,hdc,0,0,SRCCOPY
+
+    mov  ofn.lStructSize,sizeof ofn
+    mov  ofn.hwndOwner,NULL 
+    push hInstance 
+    pop  ofn.hInstance 
+    mov  ofn.lpstrFilter,OFFSET filterString 
+    mov  ofn.lpstrFile,OFFSET fileNameBuffer 
+    mov  ofn.nMaxFile,sizeof fileNameBuffer 
+    mov  ofn.Flags,OFN_FILEMUSTEXIST or OFN_PATHMUSTEXIST
+    invoke GetOpenFileName,ADDR ofn
+    .IF (!eax)
+        ret
+    .ENDIF
+    invoke LoadImage,hInstance,addr fileNameBuffer,IMAGE_BITMAP,0,0,LR_LOADFROMFILE 
+    .IF (!eax)
+        ret
+    .ENDIF
+
+    mov hBmp,HBITMAP PTR eax
+    invoke SelectObject,hdcBmp,hBmp
+    invoke BitBlt,buffer,0,0,1100,800,hdcBmp,0,0,SRCCOPY
+    invoke InvalidateRect,hWndCanvas,0,FALSE
+    invoke UpdateWindow,hWndCanvas
+    invoke DeleteDC,hdcBmp
+    invoke DeleteObject,hBmp
+    invoke DeleteObject,hBmpBuffer
+    invoke ReleaseDC,hWndCanvas,hdc
+    ret
+FileOpenMenu endp
+
+FileSaveMenu proc hWnd:HWND
+    ret
+FileSaveMenu endp
+
 HandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     mov ebx,wParam
     .IF ebx==PencilID
         mov eax,PencilID
+        mov instruction,eax
     .ELSEIF ebx==EraserID
         mov eax,EraserID
+        mov instruction,eax
+    .ELSEIF ebx==ID_FILE_OPEN_MENU
+        invoke FileOpenMenu,hWnd
+    .ELSEIF ebx==ID_FILE_SAVE_MENU
+        invoke FileSaveMenu,hWnd
     .ENDIF
-    mov instruction,eax
     ret
 HandleCommand endp
 

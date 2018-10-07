@@ -3,12 +3,14 @@ include user32.inc
 include kernel32.inc 
 include gdi32.inc
 include msvcrt.inc
+include comdlg32.inc
 includelib user32.lib 
 includelib kernel32.lib 
 includelib gdi32.lib
 includelib msvcrt.lib
+includelib comdlg32.lib
 
-CreateWindowClass proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH
+CreateWindowClass proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH,:DWORD
 CanvasProc proto :HWND,:UINT,:WPARAM,:LPARAM
 WindowProc proto :HWND,:UINT,:WPARAM,:LPARAM
 
@@ -19,13 +21,14 @@ MouseMove proto :HWND,:WPARAM,:LPARAM
 SetTrack proto :HWND
 HandleCommand proto :HWND,:WPARAM,:LPARAM
 MouseLeave proto :HWND,:WPARAM,:LPARAM
-
+FileOpenMenu proto :HWND
+FileSaveMenu proto :HWND
 RGB macro red,green,blue 
     xor eax,eax 
     mov ah,blue 
     shl eax,8 
     mov ah,green 
-    mov al,red 
+    mov al,red
 endm
 
 MAKEINTRESOURCE macro id
@@ -45,13 +48,20 @@ endm
     NumberFormat byte "%d",13,10,0
     PencilID dword 1000
     EraserID dword 1001
+    IDI_PAINTER dword 10001
+    ID_FILE_MENU dword 40003
+    ID_FILE_OPEN_MENU dword 40004
+    ID_FILE_SAVE_MENU dword 40005
 
     mouseClick dword 0
     mouseBlur dword 0
     instruction dword 1000
+    filterString BYTE 'BitMap(*.bmp)',0,'*.bmp',0
 
 .data?
     mousePosition POINT <?,?>
-    hInstance HINSTANCE ? 
+    hInstance HINSTANCE ?
     commandLine LPSTR ?
     buffer HDC ?
+    fileNameBuffer BYTE 1000 DUP(?)
+    ofn OPENFILENAME <>

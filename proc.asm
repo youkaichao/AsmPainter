@@ -6,7 +6,7 @@ include function.inc
 
 .code 
 
-CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HBRUSH
+CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HBRUSH,menu:DWORD
     local wc:WNDCLASSEX 
     mov   wc.cbSize,SIZEOF WNDCLASSEX 
     mov   wc.style, CS_HREDRAW or CS_VREDRAW
@@ -18,10 +18,11 @@ CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HB
     pop   wc.hInstance 
     push  brush
     pop   wc.hbrBackground
-    mov   wc.lpszMenuName,NULL
+    MAKEINTRESOURCE menu
+    mov   wc.lpszMenuName,eax
     push  className
     pop   wc.lpszClassName
-    MAKEINTRESOURCE 10001
+    MAKEINTRESOURCE IDI_PAINTER
     invoke LoadIcon,hInst,eax
     mov   wc.hIcon,eax 
     mov   wc.hIconSm,eax 
