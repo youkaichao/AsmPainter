@@ -110,7 +110,7 @@ WNDFileSaveMenu proc USES edx ebx hWnd:HWND
     invoke CreateCompatibleDC,hdc
     mov hdcBmp,eax
     invoke SetStretchBltMode,hdc,HALFTONE
-    invoke CreateCompatibleBitmap,hdc,SCROLLHEIGHT,SCROLLWIDTH
+    invoke CreateCompatibleBitmap,hdc,SCROLLWIDTH,SCROLLHEIGHT
     mov hBmpBuffer,eax
     invoke SelectObject,hdcBmp,hBmpBuffer
     invoke BitBlt,hdcBmp,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
