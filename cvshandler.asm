@@ -18,7 +18,7 @@ public buffer
     scrollPosY  dword 0
     mouseClick  dword 0
     mouseBlur   dword 0
-    instruction dword 40008
+    instruction dword INSTRUCTION_PENCIL
     buffer      HDC   NULL
 
 .data?
@@ -33,6 +33,8 @@ CVSInit proc hWnd:HWND
     local hdc:HDC
     local hBmp:HBITMAP
     local hBrush:HBRUSH
+    extern hInstance:HINSTANCE
+
     push sizeof SCROLLINFO
     pop info.cbSize
     mov info.fMask,SIF_RANGE or SIF_PAGE or SIF_POS
@@ -63,6 +65,10 @@ CVSInit proc hWnd:HWND
     invoke Rectangle,buffer,0,0,SCROLLWIDTH,SCROLLHEIGHT
     invoke DeleteObject,hBrush
     invoke ReleaseDC,hWnd,hdc
+
+    invoke LoadCursor,hInstance,IDC_PENCIL
+    invoke SetCursor,eax
+
     ret
 CVSInit endp
 
@@ -129,9 +135,9 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
     mov eax,instruction
     mov ebx,currentColor
-    .IF eax==ID_MENU_TOOLBAR_PENCIL
+    .IF eax==INSTRUCTION_PENCIL
         invoke CreatePen,PS_SOLID,1,ebx
-    .ELSEIF eax==ID_MENU_TOOLBAR_ERASER
+    .ELSEIF eax==INSTRUCTION_ERASER
         invoke CreatePen,PS_SOLID,10,ebx
     .ENDIF
     mov hPen,eax
@@ -275,5 +281,25 @@ CVSVerticalScroll proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     invoke SetScrollInfo,hWnd,SB_VERT,addr info,TRUE
     ret
 CVSVerticalScroll endp
+
+CVSSetCursor proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
+    extern hInstance:HINSTANCE
+
+    mov eax,lParam
+    and eax,0ffffh
+    .IF eax!=HTCLIENT
+        ret
+    .ENDIF
+
+    mov eax,instruction
+    .IF eax==INSTRUCTION_PENCIL
+        mov ebx,IDC_PENCIL
+    .ELSEIF eax==INSTRUCTION_ERASER
+        mov ebx,IDC_ERASER
+    .ENDIF
+    invoke LoadCursor,hInstance,ebx
+    invoke SetCursor,eax
+    ret
+CVSSetCursor endp
 
 end

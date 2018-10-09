@@ -176,14 +176,16 @@ WNDFileSaveMenu endp
 
 WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern instruction:dword
+    extern hInstance:HINSTANCE
+
     mov ebx,wParam
     .IF ebx==ID_MENU_TOOLBAR_PENCIL
-        mov eax,ID_MENU_TOOLBAR_PENCIL
+        mov eax,INSTRUCTION_PENCIL
         mov instruction,eax
         RGB 0,0,0
         mov currentColor,eax
     .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER
-        mov eax,ID_MENU_TOOLBAR_ERASER
+        mov eax,INSTRUCTION_ERASER
         mov instruction,eax
         RGB 255,255,255
         mov currentColor,eax
@@ -192,6 +194,7 @@ WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     .ELSEIF ebx==ID_FILE_SAVE_MENU
         invoke WNDFileSaveMenu,hWnd
     .ENDIF
+    mov eax,TRUE
     ret
 WNDHandleCommand endp
 

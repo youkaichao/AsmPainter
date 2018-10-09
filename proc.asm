@@ -50,8 +50,6 @@ WindowProc endp
 CanvasProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM 
     .IF uMsg==WM_CREATE
         invoke CVSInit,hWnd
-    .ELSEIF uMsg==WM_DESTROY 
-        invoke PostQuitMessage,NULL 
     .ELSEIF uMsg==WM_LBUTTONDOWN
         invoke CVSLButtonDown,hWnd,wParam,lParam
     .ELSEIF uMsg==WM_LBUTTONUP
@@ -66,6 +64,10 @@ CanvasProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
         invoke CVSVerticalScroll,hWnd,wParam,lParam
     .ELSEIF uMsg==WM_HSCROLL
         invoke CVSHorizontalScroll,hWnd,wParam,lParam
+    .ELSEIF uMsg==WM_SETCURSOR
+        invoke CVSSetCursor,hWnd,wParam,lParam
+    .ELSEIF uMsg==WM_DESTROY 
+        invoke PostQuitMessage,NULL 
     .ELSE 
         invoke DefWindowProc,hWnd,uMsg,wParam,lParam 
         ret 

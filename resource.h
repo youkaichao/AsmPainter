@@ -5,6 +5,8 @@
 #define IDI_PAINTER                     104
 #define IDI_ERASER                      105
 #define IDI_PENCIL                      106
+#define IDC_ERASER                      107
+#define IDC_PENCIL                      108
 #define ID_FILE_MENU                    40003
 #define ID_FILE_OPEN_MENU               40004
 #define ID_FILE_SAVE_MENU               40005
@@ -17,7 +19,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        107
+#define _APS_NEXT_RESOURCE_VALUE        109
 #define _APS_NEXT_COMMAND_VALUE         40010
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101

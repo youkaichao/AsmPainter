@@ -39,6 +39,7 @@ CVSMouseMove                proto :HWND,:WPARAM,:LPARAM
 CVSMouseLeave               proto :HWND,:WPARAM,:LPARAM
 CVSVerticalScroll           proto :HWND,:WPARAM,:LPARAM
 CVSHorizontalScroll         proto :HWND,:WPARAM,:LPARAM
+CVSSetCursor                proto :HWND,:WPARAM,:LPARAM
 
 WNDFileOpenMenu             proto :HWND
 WNDFileSaveMenu             proto :HWND
@@ -56,18 +57,23 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
     NumberFormat           byte          "%d",13,10,0
     FilterString           byte          "BitMap(*.bmp)",0,"*.bmp",0
     
-    WNDWIDTH               dword         1500
-    WNDHEIGHT              dword         850
-    CANVASWIDTH            dword         1200
-    CANVASHEIGHT           dword         750
-    SCROLLWIDTH            dword         3000
-    SCROLLHEIGHT           dword         2000
+    WNDWIDTH               equ         1500
+    WNDHEIGHT              equ         850
+    CANVASWIDTH            equ         1200
+    CANVASHEIGHT           equ         750
+    SCROLLWIDTH            equ         3000
+    SCROLLHEIGHT           equ         2000
 
-    IDI_PAINTER            dword         104
-    IDI_ERASER             dword         105
-    IDI_PENCIL             dword         106
-    ID_FILE_MENU           dword         40003
-    ID_FILE_OPEN_MENU      dword         40004
-    ID_FILE_SAVE_MENU      dword         40005
-    ID_MENU_TOOLBAR_PENCIL dword         40008
-    ID_MENU_TOOLBAR_ERASER dword         40009
+    INSTRUCTION_PENCIL     equ         0
+    INSTRUCTION_ERASER     equ         1
+
+    IDI_PAINTER            equ         104
+    IDI_ERASER             equ         105
+    IDI_PENCIL             equ         106
+    IDC_ERASER             equ         107
+    IDC_PENCIL             equ         108
+    ID_FILE_MENU           equ         40003
+    ID_FILE_OPEN_MENU      equ         40004
+    ID_FILE_SAVE_MENU      equ         40005
+    ID_MENU_TOOLBAR_PENCIL equ         40008
+    ID_MENU_TOOLBAR_ERASER equ         40009
