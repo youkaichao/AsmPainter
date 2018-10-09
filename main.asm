@@ -4,6 +4,12 @@ option casemap:none
 
 include function.inc
 
+public hInstance
+
+.data?
+    hInstance   HINSTANCE ?
+    commandLine LPSTR     ?
+
 .code 
 
 WinMain proc hInst:HINSTANCE,hPrevInst:HINSTANCE,CmdLine:LPSTR,CmdShow:DWORD

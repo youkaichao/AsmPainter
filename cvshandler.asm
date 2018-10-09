@@ -11,6 +11,7 @@ public scrollPosY
 public mouseClick
 public mouseBlur
 public instruction
+public buffer
 
 .data
     scrollPosX  dword 0
@@ -18,10 +19,12 @@ public instruction
     mouseClick  dword 0
     mouseBlur   dword 0
     instruction dword 40008
+    buffer      HDC   NULL
 
 .data?
-    hWndMainWindow HWND ?
-    hWndCanvas HWND ?
+    hWndMainWindow HWND  ?
+    hWndCanvas     HWND  ?
+    mousePosition  POINT <?,?>
 
 .code 
 
@@ -116,6 +119,7 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
         pop mousePosition.x
         ret
     .ENDIF
+
     invoke GetDC,hWnd
     mov hdc,eax
     invoke CreateCompatibleDC,hdc

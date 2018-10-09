@@ -9,6 +9,9 @@ public currentColor
 .data
     currentColor dword 0
 
+.data?
+    fileNameBuffer byte 1000 DUP(?)
+
 .code
 
 WNDLButtonUp proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
@@ -17,19 +20,19 @@ WNDLButtonUp proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     ret
 WNDLButtonUp endp
 
-
-PBITMAPINFO       TYPEDEF PTR BITMAPINFO
-PBITMAPINFOHEADER TYPEDEF PTR BITMAPINFOHEADER
-
 WNDFileOpenMenu proc hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
     local hBmpBuffer:HBITMAP
     local hBmp:HBITMAP
     local rect:RECT
+    local ofn:OPENFILENAME
     extern scrollPosX:dword
     extern scrollPosY:dword
     extern hWndCanvas:HWND
+    extern hInstance:HINSTANCE
+    extern buffer:HDC
+
     invoke GetDC,hWndCanvas
     mov hdc,eax
     invoke DeleteDC,buffer
@@ -71,7 +74,7 @@ WNDFileOpenMenu proc hWnd:HWND
     ret
 WNDFileOpenMenu endp
 
-WNDFileSaveMenu proc USES edx ebx  hWnd:HWND
+WNDFileSaveMenu proc USES edx ebx hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
     local hBmpBuffer:HBITMAP
@@ -86,6 +89,8 @@ WNDFileSaveMenu proc USES edx ebx  hWnd:HWND
     local dwSizeofDIB:DWORD
     local dwBytesWritten:DWORD
     local rcClient:RECT
+    local ofn:OPENFILENAME
+    extern hInstance:HINSTANCE
 
     mov  ofn.lStructSize,SIZEOF ofn
     mov  ofn.hwndOwner,NULL 
