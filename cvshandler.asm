@@ -53,7 +53,7 @@ CVSInit proc hWnd:HWND
     mov hdc,eax
     invoke CreateCompatibleDC,hdc
     mov buffer,eax
-    invoke CreateCompatibleBitmap,buffer,SCROLLWIDTH,SCROLLHEIGHT
+    invoke CreateCompatibleBitmap,hdc,SCROLLWIDTH,SCROLLHEIGHT
     mov hBmp,eax
     invoke SelectObject,buffer,hBmp
     RGB 255,255,255
@@ -94,8 +94,7 @@ CVSLButtonUp endp
 
 CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     local hdc:HDC
-    local rect:RECT
-    local hpen:HPEN
+    local hPen:HPEN
     local position:POINT
     local tempDC:HDC
     local tempBitmap:HBITMAP
@@ -124,7 +123,7 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     mov hdc,eax
     invoke CreateCompatibleDC,hdc
     mov tempDC,eax
-    invoke CreateCompatibleBitmap,tempDC,SCROLLWIDTH,SCROLLHEIGHT
+    invoke CreateCompatibleBitmap,hdc,SCROLLWIDTH,SCROLLHEIGHT
     mov tempBitmap,eax
     invoke SelectObject,tempDC,tempBitmap
     invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
@@ -135,8 +134,8 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     .ELSEIF eax==ID_MENU_TOOLBAR_ERASER
         invoke CreatePen,PS_SOLID,10,ebx
     .ENDIF
-    mov hpen,eax
-    invoke SelectObject,tempDC,hpen
+    mov hPen,eax
+    invoke SelectObject,tempDC,hPen
     mov eax,mousePosition.x
     mov ebx,mousePosition.y
     add eax,scrollPosX
@@ -152,9 +151,12 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     pop mousePosition.y
     pop mousePosition.x
     invoke BitBlt,buffer,0,0,SCROLLWIDTH,SCROLLHEIGHT,tempDC,0,0,SRCCOPY
+
+    invoke DeleteObject,hPen
     invoke DeleteObject,tempBitmap
-    invoke ReleaseDC,hWnd,hdc
     invoke DeleteDC,tempDC
+    invoke ReleaseDC,hWnd,hdc
+
     invoke InvalidateRect,hWnd,0,FALSE
     invoke UpdateWindow,hWnd
     invoke CVSSetTrack,hWnd

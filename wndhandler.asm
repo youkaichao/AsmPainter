@@ -7,7 +7,8 @@ include function.inc
 public currentColor
 
 .data
-    currentColor dword 0
+    currentColor dword        0
+    ofn          OPENFILENAME <>
 
 .data?
     fileNameBuffer byte 1000 DUP(?)
@@ -23,10 +24,9 @@ WNDLButtonUp endp
 WNDFileOpenMenu proc hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
-    local hBmpBuffer:HBITMAP
     local hBmp:HBITMAP
-    local rect:RECT
-    local ofn:OPENFILENAME
+    local tempDC:HDC
+    local tempBmp:HBITMAP
     extern scrollPosX:dword
     extern scrollPosY:dword
     extern hWndCanvas:HWND
@@ -35,15 +35,14 @@ WNDFileOpenMenu proc hWnd:HWND
 
     invoke GetDC,hWndCanvas
     mov hdc,eax
-    invoke DeleteDC,buffer
     invoke CreateCompatibleDC,hdc
-    mov buffer,eax
+    mov tempDC,eax
     invoke CreateCompatibleDC,hdc
     mov hdcBmp,eax
     invoke CreateCompatibleBitmap,hdc,SCROLLWIDTH,SCROLLHEIGHT
-    mov hBmpBuffer,eax
-    invoke SelectObject,buffer,hBmpBuffer
-    invoke BitBlt,buffer,scrollPosX,scrollPosY,CANVASWIDTH,CANVASWIDTH,hdc,0,0,SRCCOPY
+    mov tempBmp,eax
+    invoke SelectObject,tempDC,tempBmp
+    invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
 
     mov  ofn.lStructSize,sizeof ofn
     mov  ofn.hwndOwner,NULL 
@@ -64,13 +63,16 @@ WNDFileOpenMenu proc hWnd:HWND
 
     mov hBmp,HBITMAP PTR eax
     invoke SelectObject,hdcBmp,hBmp
-    invoke BitBlt,buffer,0,0,scrollPosX,scrollPosY,hdcBmp,0,0,SRCCOPY
+    invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,hdcBmp,0,0,SRCCOPY
+    invoke BitBlt,buffer,0,0,SCROLLWIDTH,SCROLLHEIGHT,tempDC,0,0,SRCCOPY
+    
+    invoke DeleteDC,hdcBmp
+    invoke DeleteDC,tempDC
+    invoke DeleteObject,tempBmp
+    invoke ReleaseDC,hWndCanvas,hdc
+
     invoke InvalidateRect,hWndCanvas,0,FALSE
     invoke UpdateWindow,hWndCanvas
-    invoke DeleteDC,hdcBmp
-    invoke DeleteObject,hBmp
-    invoke DeleteObject,hBmpBuffer
-    invoke ReleaseDC,hWndCanvas,hdc
     ret
 WNDFileOpenMenu endp
 
@@ -78,7 +80,6 @@ WNDFileSaveMenu proc USES edx ebx hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
     local hBmpBuffer:HBITMAP
-    local pbi:PBITMAPINFO
     local bmfHeader:BITMAPFILEHEADER   
     local bi:BITMAPINFOHEADER   
     local bmpScreen:BITMAP
@@ -89,7 +90,6 @@ WNDFileSaveMenu proc USES edx ebx hWnd:HWND
     local dwSizeofDIB:DWORD
     local dwBytesWritten:DWORD
     local rcClient:RECT
-    local ofn:OPENFILENAME
     extern hInstance:HINSTANCE
 
     mov  ofn.lStructSize,SIZEOF ofn
@@ -109,17 +109,11 @@ WNDFileSaveMenu proc USES edx ebx hWnd:HWND
     mov hdc,eax
     invoke CreateCompatibleDC,hdc
     mov hdcBmp,eax
-    invoke GetClientRect,hWndCanvas,addr rcClient
     invoke SetStretchBltMode,hdc,HALFTONE
-
-    mov ebx,rcClient.right
-    sub ebx,rcClient.left
-    mov edx,rcClient.bottom
-    sub edx,rcClient.top
-    invoke CreateCompatibleBitmap,hdc,ebx,edx
+    invoke CreateCompatibleBitmap,hdc,SCROLLHEIGHT,SCROLLWIDTH
     mov hBmpBuffer,eax
     invoke SelectObject,hdcBmp,hBmpBuffer
-    invoke BitBlt,hdcBmp,0,0,ebx,edx,hdc,0,0,SRCCOPY
+    invoke BitBlt,hdcBmp,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
     invoke GetObject,hBmpBuffer,SIZEOF BITMAP,addr bmpScreen
     push sizeof BITMAPINFOHEADER
     pop bi.biSize
