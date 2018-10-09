@@ -52,7 +52,6 @@ endm
     WNDHEIGHT              dword         850
     CANVASWIDTH            dword         1200
     CANVASHEIGHT           dword         750
-    FUNCBTNSIZE            dword         50
     COLRBTNSIZE            dword         25
 
     PencilID               dword         1000
@@ -63,6 +62,8 @@ endm
     ID_FILE_MENU           dword         40003
     ID_FILE_OPEN_MENU      dword         40004
     ID_FILE_SAVE_MENU      dword         40005
+    ID_MENU_TOOLBAR_PENCIL    dword      40008
+    ID_MENU_TOOLBAR_ERASER     dword     40009
 
     mouseClick             dword         0
     mouseBlur              dword         0

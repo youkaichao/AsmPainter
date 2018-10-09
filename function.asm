@@ -268,10 +268,10 @@ FileSaveMenu endp
 
 HandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     mov ebx,wParam
-    .IF ebx==PencilID
+    .IF ebx==ID_MENU_TOOLBAR_PENCIL
         mov eax,PencilID
         mov instruction,eax
-    .ELSEIF ebx==EraserID
+    .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER
         mov eax,EraserID
         mov instruction,eax
     .ELSEIF ebx==ID_FILE_OPEN_MENU
