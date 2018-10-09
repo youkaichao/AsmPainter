@@ -62,8 +62,6 @@ endm
     SCROLLWIDTH            dword         3000
     SCROLLHEIGHT           dword         2000
 
-    PencilID               dword         1000
-    EraserID               dword         1001
     IDI_PAINTER            dword         104
     IDI_ERASER             dword         105
     IDI_PENCIL             dword         106

@@ -4,6 +4,11 @@ option casemap:none
 
 include function.inc
 
+public currentColor
+
+.data
+    currentColor dword 0
+
 .code
 
 WNDLButtonUp proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
@@ -174,11 +179,15 @@ WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern instruction:dword
     mov ebx,wParam
     .IF ebx==ID_MENU_TOOLBAR_PENCIL
-        mov eax,PencilID
+        mov eax,ID_MENU_TOOLBAR_PENCIL
         mov instruction,eax
+        RGB 0,0,0
+        mov currentColor,eax
     .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER
-        mov eax,EraserID
+        mov eax,ID_MENU_TOOLBAR_ERASER
         mov instruction,eax
+        RGB 255,255,255
+        mov currentColor,eax
     .ELSEIF ebx==ID_FILE_OPEN_MENU
         invoke WNDFileOpenMenu,hWnd
     .ELSEIF ebx==ID_FILE_SAVE_MENU

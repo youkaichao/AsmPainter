@@ -17,7 +17,7 @@ public instruction
     scrollPosY  dword 0
     mouseClick  dword 0
     mouseBlur   dword 0
-    instruction dword 1000
+    instruction dword 40008
 
 .data?
     hWndMainWindow HWND ?
@@ -96,6 +96,7 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     local position:POINT
     local tempDC:HDC
     local tempBitmap:HBITMAP
+    extern currentColor:dword
 
     mov eax,lParam 
     and eax,0FFFFh 
@@ -124,12 +125,11 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     invoke SelectObject,tempDC,tempBitmap
     invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
     mov eax,instruction
-    .IF eax==PencilID
-        RGB 0,0,0
-        invoke CreatePen,PS_SOLID,1,eax
-    .ELSEIF eax==EraserID
-        RGB 255,255,255
-        invoke CreatePen,PS_SOLID,10,eax
+    mov ebx,currentColor
+    .IF eax==ID_MENU_TOOLBAR_PENCIL
+        invoke CreatePen,PS_SOLID,1,ebx
+    .ELSEIF eax==ID_MENU_TOOLBAR_ERASER
+        invoke CreatePen,PS_SOLID,10,ebx
     .ENDIF
     mov hpen,eax
     invoke SelectObject,tempDC,hpen
