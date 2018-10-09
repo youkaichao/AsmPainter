@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Project.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\app.ico">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="res\eraser.bmp">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="res\eraser.ico">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="res\open.bmp">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="res\pencil.bmp">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="res\pencil.ico">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="res\save.bmp">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="res\toolbar1.bmp">
+      <Filter>res</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="cvshandler.asm" />
+    <MASM Include="main.asm" />
+    <MASM Include="proc.asm" />
+    <MASM Include="wndhandler.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="function.inc" />
+    <None Include="res\eraser.cur">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\pencil.cur">
+      <Filter>res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{5c89b949-6bfa-4d53-8480-6b5e5909e041}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
