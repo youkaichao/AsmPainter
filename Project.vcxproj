@@ -11,9 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="function.asm" />
+    <MASM Include="cvshandler.asm" />
     <MASM Include="main.asm" />
     <MASM Include="proc.asm" />
+    <MASM Include="wndhandler.asm" />
   </ItemGroup>
   <ItemGroup>
     <None Include="function.inc" />

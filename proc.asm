@@ -36,7 +36,9 @@ WindowProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
     .IF uMsg==WM_DESTROY 
         invoke PostQuitMessage,NULL
     .ELSEIF uMsg==WM_COMMAND
-        invoke HandleCommand,hWnd,wParam,lParam
+        invoke WNDHandleCommand,hWnd,wParam,lParam
+    .ELSEIF uMsg==WM_LBUTTONUP
+        invoke WNDLButtonUp,hWnd,wParam,lParam
     .ELSE 
         invoke DefWindowProc,hWnd,uMsg,wParam,lParam 
         ret 
@@ -46,18 +48,24 @@ WindowProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
 WindowProc endp
 
 CanvasProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM 
-    .IF uMsg==WM_DESTROY 
+    .IF uMsg==WM_CREATE
+        invoke CVSInit,hWnd
+    .ELSEIF uMsg==WM_DESTROY 
         invoke PostQuitMessage,NULL 
     .ELSEIF uMsg==WM_LBUTTONDOWN
-        invoke LButtonDown,hWnd,wParam,lParam
+        invoke CVSLButtonDown,hWnd,wParam,lParam
     .ELSEIF uMsg==WM_LBUTTONUP
-        invoke LButtonUp,hWnd,wParam,lParam
+        invoke CVSLButtonUp,hWnd,wParam,lParam
     .ELSEIF uMsg==WM_MOUSEMOVE
-        invoke MouseMove,hWnd,wParam,lParam
+        invoke CVSMouseMove,hWnd,wParam,lParam
     .ELSEIF uMsg==WM_PAINT
-        invoke Render,hWnd
+        invoke CVSRender,hWnd
     .ELSEIF uMsg==WM_MOUSELEAVE
-        invoke MouseLeave,hWnd,wParam,lParam 
+        invoke CVSMouseLeave,hWnd,wParam,lParam
+    .ELSEIF uMsg==WM_VSCROLL
+        invoke CVSVerticalScroll,hWnd,wParam,lParam
+    .ELSEIF uMsg==WM_HSCROLL
+        invoke CVSHorizontalScroll,hWnd,wParam,lParam
     .ELSE 
         invoke DefWindowProc,hWnd,uMsg,wParam,lParam 
         ret 

@@ -14,15 +14,21 @@ CreateWindowClass proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH,:DWORD
 CanvasProc proto :HWND,:UINT,:WPARAM,:LPARAM
 WindowProc proto :HWND,:UINT,:WPARAM,:LPARAM
 
-Render proto :HWND
-LButtonDown proto :HWND,:WPARAM,:LPARAM
-LButtonUp proto :HWND,:WPARAM,:LPARAM
-MouseMove proto :HWND,:WPARAM,:LPARAM
-SetTrack proto :HWND
-HandleCommand proto :HWND,:WPARAM,:LPARAM
-MouseLeave proto :HWND,:WPARAM,:LPARAM
-FileOpenMenu proto :HWND
-FileSaveMenu proto :HWND
+CVSRender proto :HWND
+CVSLButtonDown proto :HWND,:WPARAM,:LPARAM
+CVSLButtonUp proto :HWND,:WPARAM,:LPARAM
+CVSMouseMove proto :HWND,:WPARAM,:LPARAM
+CVSSetTrack proto :HWND
+CVSMouseLeave proto :HWND,:WPARAM,:LPARAM
+CVSVerticalScroll proto :HWND,:WPARAM,:LPARAM
+CVSHorizontalScroll proto :HWND,:WPARAM,:LPARAM
+CVSInit proto :HWND
+
+WNDHandleCommand proto :HWND,:WPARAM,:LPARAM
+WNDFileOpenMenu proto :HWND
+WNDFileSaveMenu proto :HWND
+WNDLButtonUp proto :HWND,:WPARAM,:LPARAM
+
 RGB macro red,green,blue 
     xor eax,eax 
     mov ah,blue 
@@ -52,7 +58,9 @@ endm
     WNDHEIGHT              dword         850
     CANVASWIDTH            dword         1200
     CANVASHEIGHT           dword         750
-    COLRBTNSIZE            dword         25
+
+    SCROLLWIDTH            dword         3000
+    SCROLLHEIGHT           dword         2000
 
     PencilID               dword         1000
     EraserID               dword         1001
@@ -62,17 +70,14 @@ endm
     ID_FILE_MENU           dword         40003
     ID_FILE_OPEN_MENU      dword         40004
     ID_FILE_SAVE_MENU      dword         40005
-    ID_MENU_TOOLBAR_PENCIL    dword      40008
-    ID_MENU_TOOLBAR_ERASER     dword     40009
+    ID_MENU_TOOLBAR_PENCIL dword         40008
+    ID_MENU_TOOLBAR_ERASER dword         40009
 
-    mouseClick             dword         0
-    mouseBlur              dword         0
-    instruction            dword         1000
+    buffer                 HDC           NULL
 
 .data?
     mousePosition POINT <?,?>
     hInstance HINSTANCE ?
     commandLine LPSTR ?
-    buffer HDC ?
     fileNameBuffer BYTE 1000 DUP(?)
     ofn OPENFILENAME <>

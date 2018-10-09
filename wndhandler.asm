@@ -4,134 +4,38 @@ option casemap:none
 
 include function.inc
 
-public hWndMainWindow
-public hWndCanvas
+.code
 
-.data?
-    hWndMainWindow HWND ?
-    hWndCanvas HWND ?
-
-.code 
-
-Render proc hWnd:HWND
-    local hdc:HDC
-    local ps:PAINTSTRUCT
-    invoke BeginPaint,hWnd,addr ps
-    mov hdc,eax
-    invoke BitBlt,hdc,0,0,WNDWIDTH,WNDHEIGHT,buffer,0,0,SRCCOPY
-    invoke EndPaint,hWnd,addr ps
-    ret
-Render endp
-
-LButtonDown proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
-    mov mouseClick,TRUE
-    mov eax,lParam 
-    and eax,0FFFFh 
-    mov mousePosition.x,eax 
-    mov eax,lParam 
-    shr eax,16 
-    mov mousePosition.y,eax
-    ret
-LButtonDown endp
-
-LButtonUp proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
+WNDLButtonUp proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
+    extern mouseClick:dword
     mov mouseClick,FALSE
     ret
-LButtonUp endp
+WNDLButtonUp endp
 
-MouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
-    local hdc:HDC
-    local rect:RECT
-    local hpen:HPEN
-    local position:POINT
-    local bitmap:HBITMAP
-
-    mov eax,lParam 
-    and eax,0FFFFh 
-    mov position.x,eax 
-    mov eax,lParam 
-    shr eax,16 
-    mov position.y,eax
-
-    .IF !mouseClick
-        ret
-    .ENDIF
-    .IF mouseBlur
-        mov mouseBlur,FALSE
-        push position.x
-        push position.y
-        pop mousePosition.y
-        pop mousePosition.x
-        ret
-    .ENDIF
-    invoke GetDC,hWnd
-    mov hdc,eax
-    invoke CreateCompatibleDC,hdc
-    mov buffer,eax
-    invoke GetClientRect,hWnd,addr rect
-    invoke CreateCompatibleBitmap,hdc,rect.right,rect.bottom
-    mov bitmap,eax
-    invoke SelectObject,buffer,bitmap
-    invoke BitBlt,buffer,0,0,rect.right,rect.bottom,hdc,0,0,SRCCOPY
-    mov eax,instruction
-    .IF eax==PencilID
-        RGB 0,0,0
-        invoke CreatePen,PS_SOLID,1,eax
-    .ELSEIF eax==EraserID
-        RGB 255,255,255
-        invoke CreatePen,PS_SOLID,10,eax
-    .ENDIF
-    mov hpen,eax
-    invoke SelectObject,buffer,hpen
-    push position.x
-    push position.y
-    invoke MoveToEx,buffer,mousePosition.x,mousePosition.y,0
-    invoke LineTo,buffer,position.x,position.y
-    pop mousePosition.y
-    pop mousePosition.x
-    invoke DeleteObject,bitmap
-    invoke ReleaseDC,hWnd,hdc
-    invoke InvalidateRect,hWnd,0,FALSE
-    invoke UpdateWindow,hWnd
-    invoke SetTrack,hWnd
-    ret
-MouseMove endp
-
-SetTrack proc hWnd:HWND
-    local event:TRACKMOUSEEVENT
-    mov  event.cbSize,sizeof TRACKMOUSEEVENT
-    mov  event.dwFlags,TME_LEAVE
-    push hWnd
-    pop  event.hwndTrack
-    invoke TrackMouseEvent,addr event
-    ret
-SetTrack endp
-
-MouseLeave proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
-    mov mouseBlur,TRUE
-    ret
-MouseLeave endp
 
 PBITMAPINFO       TYPEDEF PTR BITMAPINFO
 PBITMAPINFOHEADER TYPEDEF PTR BITMAPINFOHEADER
 
-FileOpenMenu proc hWnd:HWND
+WNDFileOpenMenu proc hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
     local hBmpBuffer:HBITMAP
     local hBmp:HBITMAP
     local rect:RECT
-    
+    extern scrollPosX:dword
+    extern scrollPosY:dword
+    extern hWndCanvas:HWND
     invoke GetDC,hWndCanvas
     mov hdc,eax
+    invoke DeleteDC,buffer
     invoke CreateCompatibleDC,hdc
     mov buffer,eax
     invoke CreateCompatibleDC,hdc
     mov hdcBmp,eax
-    invoke CreateCompatibleBitmap,hdc,CANVASWIDTH,WNDHEIGHT
+    invoke CreateCompatibleBitmap,hdc,SCROLLWIDTH,SCROLLHEIGHT
     mov hBmpBuffer,eax
     invoke SelectObject,buffer,hBmpBuffer
-    invoke BitBlt,buffer,0,0,CANVASWIDTH,WNDHEIGHT,hdc,0,0,SRCCOPY
+    invoke BitBlt,buffer,scrollPosX,scrollPosY,CANVASWIDTH,CANVASWIDTH,hdc,0,0,SRCCOPY
 
     mov  ofn.lStructSize,sizeof ofn
     mov  ofn.hwndOwner,NULL 
@@ -152,7 +56,7 @@ FileOpenMenu proc hWnd:HWND
 
     mov hBmp,HBITMAP PTR eax
     invoke SelectObject,hdcBmp,hBmp
-    invoke BitBlt,buffer,0,0,CANVASWIDTH,WNDHEIGHT,hdcBmp,0,0,SRCCOPY
+    invoke BitBlt,buffer,0,0,scrollPosX,scrollPosY,hdcBmp,0,0,SRCCOPY
     invoke InvalidateRect,hWndCanvas,0,FALSE
     invoke UpdateWindow,hWndCanvas
     invoke DeleteDC,hdcBmp
@@ -160,9 +64,9 @@ FileOpenMenu proc hWnd:HWND
     invoke DeleteObject,hBmpBuffer
     invoke ReleaseDC,hWndCanvas,hdc
     ret
-FileOpenMenu endp
+WNDFileOpenMenu endp
 
-FileSaveMenu proc USES edx ebx  hWnd:HWND
+WNDFileSaveMenu proc USES edx ebx  hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
     local hBmpBuffer:HBITMAP
@@ -264,9 +168,10 @@ FileSaveMenu proc USES edx ebx  hWnd:HWND
     invoke DeleteObject,hBmpBuffer
     invoke ReleaseDC,hWndCanvas,hdc
     ret
-FileSaveMenu endp
+WNDFileSaveMenu endp
 
-HandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
+WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
+    extern instruction:dword
     mov ebx,wParam
     .IF ebx==ID_MENU_TOOLBAR_PENCIL
         mov eax,PencilID
@@ -275,11 +180,11 @@ HandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
         mov eax,EraserID
         mov instruction,eax
     .ELSEIF ebx==ID_FILE_OPEN_MENU
-        invoke FileOpenMenu,hWnd
+        invoke WNDFileOpenMenu,hWnd
     .ELSEIF ebx==ID_FILE_SAVE_MENU
-        invoke FileSaveMenu,hWnd
+        invoke WNDFileSaveMenu,hWnd
     .ENDIF
     ret
-HandleCommand endp
+WNDHandleCommand endp
 
 end
