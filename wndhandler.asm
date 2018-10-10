@@ -179,19 +179,19 @@ WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern hInstance:HINSTANCE
 
     mov ebx,wParam
-    .IF ebx==ID_MENU_TOOLBAR_PENCIL
+    .IF ebx==ID_MENU_TOOLBAR_PENCIL || ebx==ID_PENCIL_TOOLBAR
         mov eax,INSTRUCTION_PENCIL
         mov instruction,eax
         RGB 0,0,0
         mov currentColor,eax
-    .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER
+    .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER || ebx==ID_ERASER_TOOLBAR
         mov eax,INSTRUCTION_ERASER
         mov instruction,eax
         RGB 255,255,255
         mov currentColor,eax
-    .ELSEIF ebx==ID_FILE_OPEN_MENU
+    .ELSEIF ebx==ID_FILE_OPEN_MENU || ebx==ID_OPEN_TOOLBAR
         invoke WNDFileOpenMenu,hWnd
-    .ELSEIF ebx==ID_FILE_SAVE_MENU
+    .ELSEIF ebx==ID_FILE_SAVE_MENU || ebx==ID_SAVE_TOOLBAR
         invoke WNDFileSaveMenu,hWnd
     .ENDIF
     mov eax,TRUE

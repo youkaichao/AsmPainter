@@ -31,6 +31,7 @@
     <Image Include="res\toolbar1.bmp">
       <Filter>res</Filter>
     </Image>
+    <Image Include="res\toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="cvshandler.asm" />

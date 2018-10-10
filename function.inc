@@ -4,11 +4,13 @@ include kernel32.inc
 include gdi32.inc
 include msvcrt.inc
 include comdlg32.inc
+include comctl32.inc
 includelib user32.lib 
 includelib kernel32.lib 
 includelib gdi32.lib
 includelib msvcrt.lib
 includelib comdlg32.lib
+includelib comctl32.lib
 
 RGB macro red,green,blue 
     xor eax,eax 
@@ -27,6 +29,7 @@ PBITMAPINFO       TYPEDEF PTR BITMAPINFO
 PBITMAPINFOHEADER TYPEDEF PTR BITMAPINFOHEADER
 
 CreateWindowClass           proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH,:DWORD
+CreateToolbar               proto :HWND
 CanvasProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
 WindowProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
 
@@ -72,8 +75,15 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
     IDI_PENCIL             equ         106
     IDC_ERASER             equ         107
     IDC_PENCIL             equ         108
+    IDR_TOOLBAR            equ         118
     ID_FILE_MENU           equ         40003
     ID_FILE_OPEN_MENU      equ         40004
     ID_FILE_SAVE_MENU      equ         40005
     ID_MENU_TOOLBAR_PENCIL equ         40008
     ID_MENU_TOOLBAR_ERASER equ         40009
+    ID_OPEN_TOOLBAR        equ         40022
+    ID_SAVE_TOOLBAR        equ         40023
+    ID_PENCIL_TOOLBAR      equ         40024
+    ID_ERASER_TOOLBAR      equ         40025
+
+    TOOLBAR_BUTTON_NUM     equ         5

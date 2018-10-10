@@ -4,6 +4,9 @@ option casemap:none
 
 include function.inc
 
+.data?
+    buttonList TBBUTTON TOOLBAR_BUTTON_NUM DUP(<?,?,?,?,?>)
+
 .code 
 
 CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HBRUSH,menu:DWORD
@@ -31,6 +34,59 @@ CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HB
     invoke RegisterClassEx, addr wc
     ret
 CreateWindowClass endp
+
+CreateToolbar proc hWnd:HWND
+    local button:TBBUTTON
+    extern hInstance:HINSTANCE
+    assume eax:PTR TBBUTTON
+
+    mov eax,offset buttonList
+    mov [eax].iBitmap,0
+    mov [eax].idCommand,ID_OPEN_TOOLBAR
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_BUTTON
+    mov [eax].dwData,0
+    mov [eax].iString,0
+    
+    add eax,sizeof TBBUTTON
+    
+    mov [eax].iBitmap,1
+    mov [eax].idCommand,ID_SAVE_TOOLBAR
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_BUTTON
+    mov [eax].dwData,0
+    mov [eax].iString,0
+
+    add eax,sizeof TBBUTTON
+
+    mov [eax].iBitmap,0
+    mov [eax].idCommand,0
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_SEP
+    mov [eax].dwData,0
+    mov [eax].iString,0
+
+    add eax,sizeof TBBUTTON
+
+    mov [eax].iBitmap,2
+    mov [eax].idCommand,ID_PENCIL_TOOLBAR
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_BUTTON
+    mov [eax].dwData,0
+    mov [eax].iString,0
+
+    add eax,sizeof TBBUTTON
+    
+    mov [eax].iBitmap,3
+    mov [eax].idCommand,ID_ERASER_TOOLBAR
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_BUTTON
+    mov [eax].dwData,0
+    mov [eax].iString,0
+
+    invoke CreateToolbarEx,hWnd,WS_VISIBLE or WS_BORDER,IDR_TOOLBAR,TOOLBAR_BUTTON_NUM,hInstance,IDR_TOOLBAR,addr buttonList,TOOLBAR_BUTTON_NUM,16,16,16,16,sizeof TBBUTTON
+    ret
+CreateToolbar endp
 
 WindowProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM 
     .IF uMsg==WM_DESTROY 
