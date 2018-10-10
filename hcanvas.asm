@@ -58,6 +58,8 @@ CVSInit proc hWnd:HWND
     invoke CreateCompatibleBitmap,hdc,SCROLLWIDTH,SCROLLHEIGHT
     mov hBmp,eax
     invoke SelectObject,buffer,hBmp
+    invoke GetStockObject,NULL_PEN
+    invoke SelectObject,buffer,eax
     RGB 255,255,255
     invoke CreateSolidBrush,eax
     mov hBrush,eax

@@ -34,10 +34,10 @@
     <Image Include="res\toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="cvshandler.asm" />
     <MASM Include="main.asm" />
     <MASM Include="proc.asm" />
-    <MASM Include="wndhandler.asm" />
+    <MASM Include="hcanvas.asm" />
+    <MASM Include="hwindow.asm" />
   </ItemGroup>
   <ItemGroup>
     <None Include="function.inc" />
