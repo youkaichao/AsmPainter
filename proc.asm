@@ -37,8 +37,13 @@ CreateWindowClass endp
 
 CreateToolbar proc hWnd:HWND
     local button:TBBUTTON
+    local initCtrl:INITCOMMONCONTROLSEX
     extern hInstance:HINSTANCE
     assume eax:PTR TBBUTTON
+
+	  mov initCtrl.dwSize,sizeof INITCOMMONCONTROLSEX
+	  mov initCtrl.dwICC,ICC_BAR_CLASSES
+	  invoke InitCommonControlsEx,addr initCtrl
 
     mov eax,offset buttonList
     mov [eax].iBitmap,0
@@ -46,7 +51,7 @@ CreateToolbar proc hWnd:HWND
     mov [eax].fsState,TBSTATE_ENABLED
     mov [eax].fsStyle,TBSTYLE_BUTTON
     mov [eax].dwData,0
-    mov [eax].iString,0
+    mov [eax].iString,offset OpenString
     
     add eax,sizeof TBBUTTON
     
@@ -55,7 +60,7 @@ CreateToolbar proc hWnd:HWND
     mov [eax].fsState,TBSTATE_ENABLED
     mov [eax].fsStyle,TBSTYLE_BUTTON
     mov [eax].dwData,0
-    mov [eax].iString,0
+    mov [eax].iString,offset SaveString
 
     add eax,sizeof TBBUTTON
 
@@ -73,7 +78,7 @@ CreateToolbar proc hWnd:HWND
     mov [eax].fsState,TBSTATE_ENABLED
     mov [eax].fsStyle,TBSTYLE_BUTTON
     mov [eax].dwData,0
-    mov [eax].iString,0
+    mov [eax].iString,offset PencilString
 
     add eax,sizeof TBBUTTON
     
@@ -82,9 +87,10 @@ CreateToolbar proc hWnd:HWND
     mov [eax].fsState,TBSTATE_ENABLED
     mov [eax].fsStyle,TBSTYLE_BUTTON
     mov [eax].dwData,0
-    mov [eax].iString,0
+    mov [eax].iString,offset EraserString
 
-    invoke CreateToolbarEx,hWnd,WS_VISIBLE or WS_BORDER,IDR_TOOLBAR,TOOLBAR_BUTTON_NUM,hInstance,IDR_TOOLBAR,addr buttonList,TOOLBAR_BUTTON_NUM,16,16,16,16,sizeof TBBUTTON
+    invoke CreateToolbarEx,hWnd,WS_VISIBLE or WS_BORDER or TBSTYLE_TOOLTIPS ,IDR_TOOLBAR,TOOLBAR_BUTTON_NUM,hInstance,IDR_TOOLBAR,addr buttonList,TOOLBAR_BUTTON_NUM,16,16,16,16,sizeof TBBUTTON
+    invoke SendMessage,eax,TB_SETMAXTEXTROWS,0,0
     ret
 CreateToolbar endp
 

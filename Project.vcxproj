@@ -30,7 +30,6 @@
     <Image Include="res\pencil.ico" />
     <Image Include="res\save.bmp" />
     <Image Include="res\toolbar.bmp" />
-    <Image Include="res\toolbar1.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />

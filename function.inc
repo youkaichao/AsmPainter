@@ -5,6 +5,7 @@ include gdi32.inc
 include msvcrt.inc
 include comdlg32.inc
 include comctl32.inc
+
 includelib user32.lib 
 includelib kernel32.lib 
 includelib gdi32.lib
@@ -54,11 +55,15 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
     CanvasClass            byte          "CanvasClass",0
     ButtonClass            byte          "Button",0
     WindowName             byte          "AsmPainter",0
-    PencilName             byte          "Pencil",0
-    EraserName             byte          "Eraser",0
+    CanvasName             byte          "Canvas",0
     AppIcon                byte          "app.ico",0
     NumberFormat           byte          "%d",13,10,0
     FilterString           byte          "BitMap(*.bmp)",0,"*.bmp",0
+    
+    PencilString           byte          "P",0,"e",0,"n",0,"c",0,"i",0,"l",0,0,0
+    EraserString           byte          "E",0,"r",0,"a",0,"s",0,"e",0,"r",0,0,0
+    SaveString             byte          "S",0,"a",0,"v",0,"e",0,0,0
+    OpenString             byte          "O",0,"p",0,"e",0,"n",0,0,0
     
     WNDWIDTH               equ         1500
     WNDHEIGHT              equ         850
