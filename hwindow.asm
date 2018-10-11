@@ -4,10 +4,13 @@ option casemap:none
 
 include function.inc
 
-public currentColor
+public fgColor
+public bgColor
 
 .data
-    currentColor dword        0
+    fgColor      dword        0
+    bgColor      dword        0ffffffh
+    acrCustClr   dword        16 dup(0)
     ofn          OPENFILENAME <>
 
 .data?
@@ -21,7 +24,7 @@ WNDLButtonUp proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     ret
 WNDLButtonUp endp
 
-WNDFileOpenMenu proc hWnd:HWND
+WNDOpenFile proc hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
     local hBmp:HBITMAP
@@ -74,9 +77,9 @@ WNDFileOpenMenu proc hWnd:HWND
     invoke InvalidateRect,hWndCanvas,0,FALSE
     invoke UpdateWindow,hWndCanvas
     ret
-WNDFileOpenMenu endp
+WNDOpenFile endp
 
-WNDFileSaveMenu proc USES edx ebx hWnd:HWND
+WNDSaveFile proc USES edx ebx hWnd:HWND
     local hdc:HDC
     local hdcBmp:HDC
     local hBmpBuffer:HBITMAP
@@ -172,7 +175,33 @@ WNDFileSaveMenu proc USES edx ebx hWnd:HWND
     invoke DeleteObject,hBmpBuffer
     invoke ReleaseDC,hWndCanvas,hdc
     ret
-WNDFileSaveMenu endp
+WNDSaveFile endp
+
+WNDSelectColor proc hWnd:HWND,command:dword
+    local cc:CHOOSECOLOR
+    extern hInstance:HINSTANCE
+
+    mov cc.lStructSize,sizeof cc
+    mov eax,hWnd
+    mov cc.hwndOwner,eax
+    mov eax,hInstance
+    mov cc.hInstance,eax
+    mov cc.rgbResult,0
+    mov eax,offset acrCustClr
+    mov cc.lpCustColors,eax
+    mov cc.Flags,CC_FULLOPEN or CC_RGBINIT
+    mov cc.lCustData,0
+    mov cc.lpfnHook,0
+    mov cc.lpTemplateName,0
+    invoke ChooseColor,addr cc
+    mov eax,cc.rgbResult
+    .IF command==0
+        mov fgColor,eax
+    .ELSEIF command==1
+        mov bgColor,eax
+    .ENDIF
+    ret
+WNDSelectColor endp
 
 WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern instruction:dword
@@ -180,19 +209,17 @@ WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
 
     mov ebx,wParam
     .IF ebx==ID_MENU_TOOLBAR_PENCIL || ebx==ID_PENCIL_TOOLBAR
-        mov eax,INSTRUCTION_PENCIL
-        mov instruction,eax
-        RGB 0,0,0
-        mov currentColor,eax
+        mov instruction,INSTRUCTION_PENCIL
     .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER || ebx==ID_ERASER_TOOLBAR
-        mov eax,INSTRUCTION_ERASER
-        mov instruction,eax
-        RGB 255,255,255
-        mov currentColor,eax
-    .ELSEIF ebx==ID_FILE_OPEN_MENU || ebx==ID_OPEN_TOOLBAR
-        invoke WNDFileOpenMenu,hWnd
-    .ELSEIF ebx==ID_FILE_SAVE_MENU || ebx==ID_SAVE_TOOLBAR
-        invoke WNDFileSaveMenu,hWnd
+        mov instruction,INSTRUCTION_ERASER
+    .ELSEIF ebx==ID_MENU_TOOLBAR_PALETTE_FOREGROUND || ebx==ID_FOREGROUND_TOOLBAR
+        invoke WNDSelectColor,hWnd,0
+    .ELSEIF ebx==ID_MENU_TOOLBAR_PALETTE_BACKGROUND || ebx==ID_BACKGROUND_TOOLBAR
+        invoke WNDSelectColor,hWnd,1
+    .ELSEIF ebx==ID_MENU_FILE_OPEN || ebx==ID_OPEN_TOOLBAR
+        invoke WNDOpenFile,hWnd
+    .ELSEIF ebx==ID_MENU_FILE_SAVE || ebx==ID_SAVE_TOOLBAR
+        invoke WNDSaveFile,hWnd
     .ENDIF
     mov eax,TRUE
     ret

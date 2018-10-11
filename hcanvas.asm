@@ -106,7 +106,8 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     local position:POINT
     local tempDC:HDC
     local tempBitmap:HBITMAP
-    extern currentColor:dword
+    extern fgColor:dword
+    extern bgColor:dword
 
     mov eax,lParam 
     and eax,0FFFFh 
@@ -136,11 +137,10 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     invoke SelectObject,tempDC,tempBitmap
     invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
     mov eax,instruction
-    mov ebx,currentColor
     .IF eax==INSTRUCTION_PENCIL
-        invoke CreatePen,PS_SOLID,1,ebx
+        invoke CreatePen,PS_SOLID,1,fgColor
     .ELSEIF eax==INSTRUCTION_ERASER
-        invoke CreatePen,PS_SOLID,10,ebx
+        invoke CreatePen,PS_SOLID,10,bgColor
     .ENDIF
     mov hPen,eax
     invoke SelectObject,tempDC,hPen

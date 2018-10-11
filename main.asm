@@ -18,7 +18,7 @@ WinMain proc hInst:HINSTANCE,hPrevInst:HINSTANCE,CmdLine:LPSTR,CmdShow:DWORD
     local msg:MSG
     mov ebx,OFFSET WindowProc
     invoke GetStockObject,GRAY_BRUSH
-    invoke CreateWindowClass,hInst,ebx,addr WindowClass,eax,ID_FILE_MENU
+    invoke CreateWindowClass,hInst,ebx,addr WindowClass,eax,ID_MENU
     mov ebx,OFFSET CanvasProc
     invoke GetStockObject,WHITE_BRUSH
     invoke CreateWindowClass,hInst,ebx,addr CanvasClass,eax,0

@@ -89,6 +89,33 @@ CreateToolbar proc hWnd:HWND
     mov [eax].dwData,0
     mov [eax].iString,offset EraserString
 
+    add eax,sizeof TBBUTTON
+
+    mov [eax].iBitmap,0
+    mov [eax].idCommand,0
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_SEP
+    mov [eax].dwData,0
+    mov [eax].iString,0
+
+    add eax,sizeof TBBUTTON
+    
+    mov [eax].iBitmap,4
+    mov [eax].idCommand,ID_FOREGROUND_TOOLBAR
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_BUTTON
+    mov [eax].dwData,0
+    mov [eax].iString,offset ForegroundString
+
+    add eax,sizeof TBBUTTON
+    
+    mov [eax].iBitmap,5
+    mov [eax].idCommand,ID_BACKGROUND_TOOLBAR
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_BUTTON
+    mov [eax].dwData,0
+    mov [eax].iString,offset BackgroundString
+
     invoke CreateToolbarEx,hWnd,WS_VISIBLE or WS_BORDER or TBSTYLE_TOOLTIPS ,IDR_TOOLBAR,TOOLBAR_BUTTON_NUM,hInstance,IDR_TOOLBAR,addr buttonList,TOOLBAR_BUTTON_NUM,16,16,16,16,sizeof TBBUTTON
     invoke SendMessage,eax,TB_SETMAXTEXTROWS,0,0
     ret

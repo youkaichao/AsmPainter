@@ -45,50 +45,60 @@ CVSVerticalScroll           proto :HWND,:WPARAM,:LPARAM
 CVSHorizontalScroll         proto :HWND,:WPARAM,:LPARAM
 CVSSetCursor                proto :HWND,:WPARAM,:LPARAM
 
-WNDFileOpenMenu             proto :HWND
-WNDFileSaveMenu             proto :HWND
+WNDFileOpen                 proto :HWND
+WNDFileSave                 proto :HWND
+WNDSelectColor              proto :HWND,:dword
 WNDHandleCommand            proto :HWND,:WPARAM,:LPARAM
 WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
 
 .data
-    WindowClass            byte          "WindowClass",0
-    CanvasClass            byte          "CanvasClass",0
-    ButtonClass            byte          "Button",0
-    WindowName             byte          "AsmPainter",0
-    CanvasName             byte          "Canvas",0
-    AppIcon                byte          "app.ico",0
-    NumberFormat           byte          "%d",13,10,0
-    FilterString           byte          "BitMap(*.bmp)",0,"*.bmp",0
+    WindowClass                byte          "WindowClass",0
+    CanvasClass                byte          "CanvasClass",0
+    ButtonClass                byte          "Button",0
+    WindowName                 byte          "AsmPainter",0
+    CanvasName                 byte          "Canvas",0
+    AppIcon                    byte          "app.ico",0
+    NumberFormat               byte          "%d",13,10,0
+    FilterString               byte          "BitMap(*.bmp)",0,"*.bmp",0
     
-    PencilString           byte          "P",0,"e",0,"n",0,"c",0,"i",0,"l",0,0,0
-    EraserString           byte          "E",0,"r",0,"a",0,"s",0,"e",0,"r",0,0,0
-    SaveString             byte          "S",0,"a",0,"v",0,"e",0,0,0
-    OpenString             byte          "O",0,"p",0,"e",0,"n",0,0,0
+    PencilString               byte          "P",0,"e",0,"n",0,"c",0,"i",0,"l",0,0,0
+    EraserString               byte          "E",0,"r",0,"a",0,"s",0,"e",0,"r",0,0,0
+    SaveString                 byte          "S",0,"a",0,"v",0,"e",0,0,0
+    OpenString                 byte          "O",0,"p",0,"e",0,"n",0,0,0
+    ForegroundString           byte          "F",0,"o",0,"r",0,"e",0,"g",0,"r",0,"o",0,"u",0,"n",0,"d",0," ",0,"C",0,"o",0,"l",0,"o",0,"r",0,0,0
+    BackgroundString           byte          "B",0,"a",0,"c",0,"k",0,"g",0,"r",0,"o",0,"u",0,"n",0,"d",0," ",0,"C",0,"o",0,"l",0,"o",0,"r",0,0,0
     
-    WNDWIDTH               equ         1500
-    WNDHEIGHT              equ         850
-    CANVASWIDTH            equ         1200
-    CANVASHEIGHT           equ         750
-    SCROLLWIDTH            equ         3000
-    SCROLLHEIGHT           equ         2000
+    WNDWIDTH                   equ         1500
+    WNDHEIGHT                  equ         850
+    CANVASWIDTH                equ         1200
+    CANVASHEIGHT               equ         750
+    SCROLLWIDTH                equ         3000
+    SCROLLHEIGHT               equ         2000
 
-    INSTRUCTION_PENCIL     equ         0
-    INSTRUCTION_ERASER     equ         1
+    INSTRUCTION_PENCIL         equ         0
+    INSTRUCTION_ERASER         equ         1
 
-    IDI_PAINTER            equ         104
-    IDI_ERASER             equ         105
-    IDI_PENCIL             equ         106
-    IDC_ERASER             equ         107
-    IDC_PENCIL             equ         108
-    IDR_TOOLBAR            equ         118
-    ID_FILE_MENU           equ         40003
-    ID_FILE_OPEN_MENU      equ         40004
-    ID_FILE_SAVE_MENU      equ         40005
-    ID_MENU_TOOLBAR_PENCIL equ         40008
-    ID_MENU_TOOLBAR_ERASER equ         40009
-    ID_OPEN_TOOLBAR        equ         40022
-    ID_SAVE_TOOLBAR        equ         40023
-    ID_PENCIL_TOOLBAR      equ         40024
-    ID_ERASER_TOOLBAR      equ         40025
-
-    TOOLBAR_BUTTON_NUM     equ         5
+    IDI_PAINTER                equ         104
+    IDI_ERASER                 equ         105
+    IDI_PENCIL                 equ         106
+    IDC_ERASER                 equ         107
+    IDC_PENCIL                 equ         108
+    IDB_OPEN                   equ         114
+    IDB_SAVE                   equ         115
+    IDB_ERASER                 equ         116
+    IDB_PENCIL                 equ         117
+    IDR_TOOLBAR                equ         118
+    ID_MENU                    equ         40003
+    ID_MENU_TOOLBAR_PENCIL     equ         40008
+    ID_MENU_TOOLBAR_ERASER     equ         40009
+    ID_OPEN_TOOLBAR            equ         40022
+    ID_SAVE_TOOLBAR            equ         40023
+    ID_PENCIL_TOOLBAR          equ         40024
+    ID_ERASER_TOOLBAR          equ         40025
+    ID_MENU_FILE_OPEN          equ         40029
+    ID_MENU_FILE_SAVE          equ         40030
+    ID_MENU_TOOLBAR_PALETTE_FOREGROUND equ 40036
+    ID_MENU_TOOLBAR_PALETTE_BACKGROUND equ 40037
+    ID_FOREGROUND_TOOLBAR      equ         40038
+    ID_BACKGROUND_TOOLBAR      equ         40039
+    TOOLBAR_BUTTON_NUM         equ         8
