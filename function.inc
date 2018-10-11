@@ -33,6 +33,7 @@ CreateWindowClass           proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH,:DWORD
 CreateToolbar               proto :HWND
 CanvasProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
 WindowProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
+DialogProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
 
 CVSInit                     proto :HWND
 CVSRender                   proto :HWND
@@ -51,6 +52,8 @@ WNDSelectColor              proto :HWND,:dword
 WNDHandleCommand            proto :HWND,:WPARAM,:LPARAM
 WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
 
+DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
+
 .data
     WindowClass                byte          "WindowClass",0
     CanvasClass                byte          "CanvasClass",0
@@ -67,7 +70,8 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
     OpenString                 byte          "O",0,"p",0,"e",0,"n",0,0,0
     ForegroundString           byte          "F",0,"o",0,"r",0,"e",0,"g",0,"r",0,"o",0,"u",0,"n",0,"d",0," ",0,"C",0,"o",0,"l",0,"o",0,"r",0,0,0
     BackgroundString           byte          "B",0,"a",0,"c",0,"k",0,"g",0,"r",0,"o",0,"u",0,"n",0,"d",0," ",0,"C",0,"o",0,"l",0,"o",0,"r",0,0,0
-    
+    TextString                 byte          "T",0,"e",0,"x",0,"t",0,0,0
+
     WNDWIDTH                   equ         1500
     WNDHEIGHT                  equ         850
     CANVASWIDTH                equ         1200
@@ -77,6 +81,7 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
 
     INSTRUCTION_PENCIL         equ         0
     INSTRUCTION_ERASER         equ         1
+    INSTRUCTION_TEXT           equ         2
 
     IDI_PAINTER                equ         104
     IDI_ERASER                 equ         105
@@ -89,6 +94,9 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
     IDB_PENCIL                 equ         117
     IDR_TOOLBAR                equ         118
     IDR_ACCELERATOR            equ         120
+    IDD_DIALOG                 equ         121
+    IDC_TEXT                   equ         124
+    IDC_EDIT                   equ         1003
     ID_MENU                    equ         40003
     ID_MENU_TOOLBAR_PENCIL     equ         40008
     ID_MENU_TOOLBAR_ERASER     equ         40009
@@ -102,4 +110,8 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
     ID_MENU_TOOLBAR_PALETTE_BACKGROUND equ 40037
     ID_FOREGROUND_TOOLBAR      equ         40038
     ID_BACKGROUND_TOOLBAR      equ         40039
-    TOOLBAR_BUTTON_NUM         equ         8
+    ID_MENU_TOOLBAR_TEXT       equ         40049
+    ID_TEXT_TOOLBAR            equ         40050
+
+    TOOLBAR_BUTTON_NUM         equ         9
+    TEXT_MAX_LENGTH            equ         80

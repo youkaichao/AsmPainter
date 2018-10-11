@@ -46,6 +46,9 @@
     <None Include="res\pencil.cur">
       <Filter>res</Filter>
     </None>
+    <None Include="res\text.cur">
+      <Filter>res</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="res">

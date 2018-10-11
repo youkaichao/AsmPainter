@@ -20,6 +20,7 @@
     <None Include="function.inc" />
     <None Include="res\eraser.cur" />
     <None Include="res\pencil.cur" />
+    <None Include="res\text.cur" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\app.ico" />

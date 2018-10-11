@@ -6,7 +6,7 @@ include function.inc
 
 .data?
     buttonList TBBUTTON TOOLBAR_BUTTON_NUM DUP(<?,?,?,?,?>)
-
+    
 .code 
 
 CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HBRUSH,menu:DWORD
@@ -115,6 +115,16 @@ CreateToolbar proc hWnd:HWND
     mov [eax].fsStyle,TBSTYLE_BUTTON
     mov [eax].dwData,0
     mov [eax].iString,offset BackgroundString
+    
+    add eax,sizeof TBBUTTON
+    
+    mov [eax].iBitmap,6
+    mov [eax].idCommand,ID_TEXT_TOOLBAR
+    mov [eax].fsState,TBSTATE_ENABLED
+    mov [eax].fsStyle,TBSTYLE_BUTTON
+    mov [eax].dwData,0
+    mov [eax].iString,offset TextString
+
 
     invoke CreateToolbarEx,hWnd,WS_VISIBLE or WS_BORDER or TBSTYLE_TOOLTIPS ,IDR_TOOLBAR,TOOLBAR_BUTTON_NUM,hInstance,IDR_TOOLBAR,addr buttonList,TOOLBAR_BUTTON_NUM,16,16,16,16,sizeof TBBUTTON
     invoke SendMessage,eax,TB_SETMAXTEXTROWS,0,0
@@ -164,5 +174,17 @@ CanvasProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
     xor    eax,eax 
     ret 
 CanvasProc endp
+
+DialogProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
+    mov ebx,uMsg
+    .IF ebx==WM_COMMAND
+        invoke DLGHandleCommand,hWnd,wParam,lParam
+    .ELSE 
+        invoke DefWindowProc,hWnd,uMsg,wParam,lParam 
+        ret 
+    .ENDIF 
+    xor    eax,eax 
+    ret
+DialogProc endp
 
 end

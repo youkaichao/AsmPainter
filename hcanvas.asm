@@ -25,6 +25,7 @@ public buffer
     hWndMainWindow HWND  ?
     hWndCanvas     HWND  ?
     mousePosition  POINT <?,?>
+    editText       byte  TEXT_MAX_LENGTH DUP(?)
 
 .code 
 
@@ -85,13 +86,43 @@ CVSRender proc hWnd:HWND
 CVSRender endp
 
 CVSLButtonDown proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
-    mov mouseClick,TRUE
+    extern hInstance:HINSTANCE
+    local hdc:HDC
+    local tempDC:HDC
+    local tempBitmap:HBITMAP
+
     mov eax,lParam 
     and eax,0FFFFh 
     mov mousePosition.x,eax 
     mov eax,lParam 
     shr eax,16 
     mov mousePosition.y,eax
+    mov ebx,instruction
+    .IF ebx==INSTRUCTION_TEXT
+        invoke DialogBoxParam,hInstance,IDD_DIALOG,hWndMainWindow,offset DialogProc,0
+        invoke GetDC,hWnd
+        mov hdc,eax
+        invoke CreateCompatibleDC,hdc
+        mov tempDC,eax
+        invoke CreateCompatibleBitmap,hdc,SCROLLWIDTH,SCROLLHEIGHT
+        mov tempBitmap,eax
+        invoke SelectObject,tempDC,tempBitmap
+        invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
+        invoke SetBkMode,tempDC,TRANSPARENT
+        invoke crt_strlen,offset editText
+        invoke TextOut,tempDC,mousePosition.x,mousePosition.y,addr editText,eax
+        invoke BitBlt,buffer,0,0,SCROLLWIDTH,SCROLLHEIGHT,tempDC,0,0,SRCCOPY
+
+        invoke DeleteObject,tempBitmap
+        invoke DeleteDC,tempDC
+        invoke ReleaseDC,hWnd,hdc
+
+        invoke InvalidateRect,hWnd,0,FALSE
+        invoke UpdateWindow,hWnd
+
+    .ELSEIF ebx==INSTRUCTION_PENCIL || ebx== INSTRUCTION_ERASER
+        mov mouseClick,TRUE
+    .ENDIF
     ret
 CVSLButtonDown endp
 
@@ -298,10 +329,25 @@ CVSSetCursor proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
         mov ebx,IDC_PENCIL
     .ELSEIF eax==INSTRUCTION_ERASER
         mov ebx,IDC_ERASER
+    .ELSEIF eax==INSTRUCTION_TEXT
+        mov ebx,IDC_TEXT
     .ENDIF
     invoke LoadCursor,hInstance,ebx
     invoke SetCursor,eax
     ret
 CVSSetCursor endp
+
+DLGHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
+    mov ebx,wParam
+    and ebx,0ffffh
+    .IF ebx==IDOK
+        invoke GetDlgItemText,hWnd,IDC_EDIT,addr editText,TEXT_MAX_LENGTH
+        invoke EndDialog,hWnd,wParam
+    .ELSEIF ebx==IDCANCEL
+        invoke EndDialog,hWnd,wParam
+        mov eax,TRUE
+    .ENDIF
+    ret
+DLGHandleCommand endp
 
 end
