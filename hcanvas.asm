@@ -14,12 +14,14 @@ public instruction
 public buffer
 
 .data
-    scrollPosX  dword 0
-    scrollPosY  dword 0
-    mouseClick  dword 0
-    mouseBlur   dword 0
-    instruction dword INSTRUCTION_PENCIL
-    buffer      HDC   NULL
+    scrollPosX          dword 0
+    scrollPosY          dword 0
+    mouseClick          dword 0
+    mouseBlur           dword 0
+    instruction         dword INSTRUCTION_PENCIL
+    buffer              HDC   NULL
+    stringBuffer        byte  1000 DUP(?)
+    notShowDrawing      dword 1
 
 .data?
     hWndMainWindow HWND  ?
@@ -140,12 +142,26 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern fgColor:dword
     extern bgColor:dword
 
+    .IF notShowDrawing==1
+        invoke WNDDrawTextOnStatusBar,offset PencilStatus,STATUSBAR_TOOL_ID
+        sub notShowDrawing,1
+    .ENDIF
+
     mov eax,lParam 
     and eax,0FFFFh 
     mov position.x,eax 
     mov eax,lParam 
     shr eax,16 
     mov position.y,eax
+
+    mov eax,position.x
+    mov ebx,position.y
+    push eax
+    push ebx
+    add eax,scrollPosX
+    add ebx,scrollPosY
+    invoke crt_sprintf,offset stringBuffer,offset PositionFormat,eax,ebx
+    invoke WNDDrawTextOnStatusBar,offset stringBuffer,STATUSBAR_POSITION_ID
 
     .IF !mouseClick
         ret
@@ -199,6 +215,7 @@ CVSMouseMove proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     invoke InvalidateRect,hWnd,0,FALSE
     invoke UpdateWindow,hWnd
     invoke CVSSetTrack,hWnd
+
     ret
 CVSMouseMove endp
 

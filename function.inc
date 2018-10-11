@@ -5,6 +5,7 @@ include gdi32.inc
 include msvcrt.inc
 include comdlg32.inc
 include comctl32.inc
+include msvcrt.inc
 
 includelib user32.lib 
 includelib kernel32.lib 
@@ -12,6 +13,7 @@ includelib gdi32.lib
 includelib msvcrt.lib
 includelib comdlg32.lib
 includelib comctl32.lib
+includelib msvcrt.lib
 
 RGB macro red,green,blue 
     xor eax,eax 
@@ -29,8 +31,9 @@ endm
 PBITMAPINFO       TYPEDEF PTR BITMAPINFO
 PBITMAPINFOHEADER TYPEDEF PTR BITMAPINFOHEADER
 
-CreateWindowClass           proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH,:DWORD
+CreateWindowClass           proto :HINSTANCE,:WNDPROC,:LPCSTR,:HBRUSH,:dword
 CreateToolbar               proto :HWND
+CreateStatusbar             proto :HWND
 CanvasProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
 WindowProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
 DialogProc                  proto :HWND,:UINT,:WPARAM,:LPARAM
@@ -51,6 +54,7 @@ WNDFileSave                 proto :HWND
 WNDSelectColor              proto :HWND,:dword
 WNDHandleCommand            proto :HWND,:WPARAM,:LPARAM
 WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
+WNDDrawTextOnStatusBar      proto :dword, :dword
 
 DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
 
@@ -62,8 +66,13 @@ DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
     CanvasName                 byte          "Canvas",0
     AppIcon                    byte          "app.ico",0
     NumberFormat               byte          "%d",13,10,0
+    PositionFormat             byte          "Mouse Position: %d(w) x %d(h)",0
     FilterString               byte          "BitMap(*.bmp)",0,"*.bmp",0
-    
+
+    PencilStatus               byte          "Pencil",0
+    EraserStatus               byte          "Eraser",0
+    TextStatus                 byte          "Text",0
+
     PencilString               byte          "P",0,"e",0,"n",0,"c",0,"i",0,"l",0,0,0
     EraserString               byte          "E",0,"r",0,"a",0,"s",0,"e",0,"r",0,0,0
     SaveString                 byte          "S",0,"a",0,"v",0,"e",0,0,0
@@ -73,9 +82,9 @@ DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
     TextString                 byte          "T",0,"e",0,"x",0,"t",0,0,0
 
     WNDWIDTH                   equ         1500
-    WNDHEIGHT                  equ         850
+    WNDHEIGHT                  equ         700
     CANVASWIDTH                equ         1200
-    CANVASHEIGHT               equ         750
+    CANVASHEIGHT               equ         500
     SCROLLWIDTH                equ         3000
     SCROLLHEIGHT               equ         2000
 
@@ -113,5 +122,10 @@ DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
     ID_MENU_TOOLBAR_TEXT       equ         40049
     ID_TEXT_TOOLBAR            equ         40050
 
-    TOOLBAR_BUTTON_NUM         equ         9
+    STATUSBAR_SIZE_ID          equ         1
+    STATUSBAR_TOOL_ID          equ         2
+    STATUSBAR_POSITION_ID      equ         3
+    
     TEXT_MAX_LENGTH            equ         80
+    TOOLBAR_BUTTON_NUM         equ         9
+    STATBAR_BUTTON_NUM         equ         4

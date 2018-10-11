@@ -18,6 +18,30 @@ public bgColor
 
 .code
 
+
+WNDDrawTextOnStatusBar proc text:dword,iPart:dword
+    local hMain:HWND
+    local hdc:HDC
+    local rectangle:RECT
+    extern hInstance:HINSTANCE
+    extern hWndStatus:HWND
+    extern eachStatusBarWidth:dword
+
+    invoke GetParent,hWndStatus
+    mov hMain,eax
+    invoke GetDC,hMain
+    mov hdc,eax
+    invoke GetClientRect,hWndStatus,addr rectangle
+    mov eax,iPart
+    imul eachStatusBarWidth
+    mov rectangle.right,eax
+    sub eax,eachStatusBarWidth
+    mov rectangle.left,eax
+    invoke MapWindowPoints,hWndStatus,hMain,addr rectangle,2
+    invoke DrawStatusText,hdc,addr rectangle,text,NULL
+    ret
+WNDDrawTextOnStatusBar endp
+
 WNDLButtonUp proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern mouseClick:dword
     mov mouseClick,FALSE
@@ -86,12 +110,12 @@ WNDSaveFile proc USES edx ebx hWnd:HWND
     local bmfHeader:BITMAPFILEHEADER   
     local bi:BITMAPINFOHEADER   
     local bmpScreen:BITMAP
-    local dwBmpSize:DWORD
-    local hDIB: HANDLE
-    local lpbitmap : PTR BYTE
+    local dwBmpSize:dword
+    local hDIB:HANDLE
+    local lpbitmap:PTR byte
     local hFile:HANDLE  
-    local dwSizeofDIB:DWORD
-    local dwBytesWritten:DWORD
+    local dwSizeofDIB:dword
+    local dwBytesWritten:dword
     local rcClient:RECT
     extern hInstance:HINSTANCE
 
@@ -206,14 +230,16 @@ WNDSelectColor endp
 WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern instruction:dword
     extern hInstance:HINSTANCE
-
     mov ebx,wParam
     and ebx,0000ffffh
     .IF ebx==ID_MENU_TOOLBAR_PENCIL || ebx==ID_PENCIL_TOOLBAR
+        invoke WNDDrawTextOnStatusBar,offset PencilStatus,STATUSBAR_TOOL_ID
         mov instruction,INSTRUCTION_PENCIL
     .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER || ebx==ID_ERASER_TOOLBAR
+        invoke WNDDrawTextOnStatusBar,offset EraserStatus,STATUSBAR_TOOL_ID
         mov instruction,INSTRUCTION_ERASER
     .ELSEIF ebx==ID_MENU_TOOLBAR_TEXT || ebx==ID_TEXT_TOOLBAR
+        invoke WNDDrawTextOnStatusBar,offset TextStatus,STATUSBAR_TOOL_ID
         mov instruction,INSTRUCTION_TEXT
     .ELSEIF ebx==ID_MENU_TOOLBAR_PALETTE_FOREGROUND || ebx==ID_FOREGROUND_TOOLBAR
         invoke WNDSelectColor,hWnd,0

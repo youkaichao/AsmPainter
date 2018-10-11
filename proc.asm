@@ -4,12 +4,21 @@ option casemap:none
 
 include function.inc
 
+public partRightEdge
+public eachStatusBarWidth
+
+.data
+    stringBuffer byte 1000 DUP(?)
+    canvasSizeFormat byte "Canvas size: %d(w) x %d(h)", 0
+
 .data?
     buttonList TBBUTTON TOOLBAR_BUTTON_NUM DUP(<?,?,?,?,?>)
-    
+    partRightEdge dword 256 DUP(0)
+    eachStatusBarWidth dword ?
+
 .code 
 
-CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HBRUSH,menu:DWORD
+CreateWindowClass proc hInst:HINSTANCE,wndProc:WNDPROC,className:LPCSTR,brush:HBRUSH,menu:dword
     local wc:WNDCLASSEX 
     mov   wc.cbSize,SIZEOF WNDCLASSEX 
     mov   wc.style, CS_HREDRAW or CS_VREDRAW
@@ -41,9 +50,9 @@ CreateToolbar proc hWnd:HWND
     extern hInstance:HINSTANCE
     assume eax:PTR TBBUTTON
 
-	  mov initCtrl.dwSize,sizeof INITCOMMONCONTROLSEX
-	  mov initCtrl.dwICC,ICC_BAR_CLASSES
-	  invoke InitCommonControlsEx,addr initCtrl
+    mov initCtrl.dwSize,sizeof INITCOMMONCONTROLSEX
+    mov initCtrl.dwICC,ICC_BAR_CLASSES
+    invoke InitCommonControlsEx,addr initCtrl
 
     mov eax,offset buttonList
     mov [eax].iBitmap,0
@@ -131,8 +140,41 @@ CreateToolbar proc hWnd:HWND
     ret
 CreateToolbar endp
 
-WindowProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM 
-    .IF uMsg==WM_DESTROY 
+CreateStatusbar proc hWnd:HWND
+    local initCtrl:INITCOMMONCONTROLSEX
+    local rectangle:RECT
+    extern hInstance:HINSTANCE
+    extern hWndStatus:HWND
+
+    invoke crt_sprintf,offset stringBuffer,offset canvasSizeFormat,SCROLLWIDTH,SCROLLHEIGHT
+    mov initCtrl.dwSize,sizeof INITCOMMONCONTROLSEX
+    mov initCtrl.dwICC,ICC_BAR_CLASSES
+    invoke InitCommonControlsEx,addr initCtrl
+    invoke CreateStatusWindow,WS_CHILD or WS_VISIBLE,offset stringBuffer,hWnd,NULL
+    mov hWndStatus, eax
+    invoke GetClientRect,hWndStatus,addr rectangle
+    mov eax, rectangle.right
+    cdq
+    mov ebx,STATBAR_BUTTON_NUM
+    idiv ebx
+    mov eachStatusBarWidth, eax
+    mov eax,eachStatusBarWidth
+    mov ebx,0
+    mov ecx,STATBAR_BUTTON_NUM
+    sub ecx,1
+    tag:
+        mov partRightEdge[ebx],eax
+        add eax,eachStatusBarWidth
+        add ebx,sizeof dword
+        loop tag
+    invoke SendMessage,hWndStatus,SB_SETPARTS,STATBAR_BUTTON_NUM,offset partRightEdge
+    ret
+CreateStatusbar endp
+
+WindowProc proc hWnd:HWND,uMsg:UINT,wParam:WPARAM,lParam:LPARAM 
+    .IF uMsg==WM_CREATE
+        mov eax, hWnd
+    .ELSEIF uMsg==WM_DESTROY 
         invoke PostQuitMessage,NULL
     .ELSEIF uMsg==WM_COMMAND
         invoke WNDHandleCommand,hWnd,wParam,lParam
@@ -146,7 +188,7 @@ WindowProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
     ret 
 WindowProc endp
 
-CanvasProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM 
+CanvasProc proc hWnd:HWND,uMsg:UINT,wParam:WPARAM,lParam:LPARAM 
     .IF uMsg==WM_CREATE
         invoke CVSInit,hWnd
     .ELSEIF uMsg==WM_LBUTTONDOWN
@@ -171,7 +213,7 @@ CanvasProc proc hWnd:HWND, uMsg:UINT, wParam:WPARAM, lParam:LPARAM
         invoke DefWindowProc,hWnd,uMsg,wParam,lParam 
         ret 
     .ENDIF 
-    xor    eax,eax 
+    xor eax,eax 
     ret 
 CanvasProc endp
 
