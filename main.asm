@@ -16,6 +16,7 @@ WinMain proc hInst:HINSTANCE,hPrevInst:HINSTANCE,CmdLine:LPSTR,CmdShow:DWORD
     extern hWndMainWindow:HWND
     extern hWndCanvas:HWND
     local msg:MSG
+    local hAccelerator:HACCEL
     mov ebx,OFFSET WindowProc
     invoke GetStockObject,GRAY_BRUSH
     invoke CreateWindowClass,hInst,ebx,addr WindowClass,eax,ID_MENU
@@ -27,11 +28,16 @@ WinMain proc hInst:HINSTANCE,hPrevInst:HINSTANCE,CmdLine:LPSTR,CmdShow:DWORD
     invoke CreateWindowEx,0,addr CanvasClass,addr CanvasName,WS_CHILD or WS_VISIBLE,0,35,CANVASWIDTH,CANVASHEIGHT,hWndMainWindow,0,hInst,0
     mov hWndCanvas,eax
     invoke CreateToolbar,hWndMainWindow
+    invoke LoadAccelerators,hInst,IDR_ACCELERATOR
+    mov hAccelerator,eax
     invoke ShowWindow,hWndMainWindow,SW_SHOWNORMAL 
     invoke UpdateWindow,hWndMainWindow
     .WHILE TRUE 
         invoke GetMessage,addr msg,NULL,0,0 
         .BREAK .IF (!eax) 
+        invoke TranslateAccelerator,hWndMainWindow,hAccelerator,addr msg
+        .CONTINUE .IF eax
+        invoke TranslateMessage,addr msg
         invoke DispatchMessage,addr msg 
     .ENDW 
     mov     eax,msg.wParam 

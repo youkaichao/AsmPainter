@@ -208,6 +208,7 @@ WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern hInstance:HINSTANCE
 
     mov ebx,wParam
+    and ebx,0000ffffh
     .IF ebx==ID_MENU_TOOLBAR_PENCIL || ebx==ID_PENCIL_TOOLBAR
         mov instruction,INSTRUCTION_PENCIL
     .ELSEIF ebx==ID_MENU_TOOLBAR_ERASER || ebx==ID_ERASER_TOOLBAR

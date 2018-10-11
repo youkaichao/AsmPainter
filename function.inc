@@ -88,6 +88,7 @@ WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
     IDB_ERASER                 equ         116
     IDB_PENCIL                 equ         117
     IDR_TOOLBAR                equ         118
+    IDR_ACCELERATOR            equ         120
     ID_MENU                    equ         40003
     ID_MENU_TOOLBAR_PENCIL     equ         40008
     ID_MENU_TOOLBAR_ERASER     equ         40009
