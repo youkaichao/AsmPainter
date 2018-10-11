@@ -92,35 +92,35 @@ DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
     INSTRUCTION_ERASER         equ         1
     INSTRUCTION_TEXT           equ         2
 
-    IDI_PAINTER                equ         104
-    IDI_ERASER                 equ         105
-    IDI_PENCIL                 equ         106
-    IDC_ERASER                 equ         107
-    IDC_PENCIL                 equ         108
-    IDB_OPEN                   equ         114
-    IDB_SAVE                   equ         115
-    IDB_ERASER                 equ         116
-    IDB_PENCIL                 equ         117
-    IDR_TOOLBAR                equ         118
-    IDR_ACCELERATOR            equ         120
-    IDD_DIALOG                 equ         121
-    IDC_TEXT                   equ         124
-    IDC_EDIT                   equ         1003
-    ID_MENU                    equ         40003
-    ID_MENU_TOOLBAR_PENCIL     equ         40008
-    ID_MENU_TOOLBAR_ERASER     equ         40009
-    ID_OPEN_TOOLBAR            equ         40022
-    ID_SAVE_TOOLBAR            equ         40023
-    ID_PENCIL_TOOLBAR          equ         40024
-    ID_ERASER_TOOLBAR          equ         40025
-    ID_MENU_FILE_OPEN          equ         40029
-    ID_MENU_FILE_SAVE          equ         40030
-    ID_MENU_TOOLBAR_PALETTE_FOREGROUND equ 40036
-    ID_MENU_TOOLBAR_PALETTE_BACKGROUND equ 40037
-    ID_FOREGROUND_TOOLBAR      equ         40038
-    ID_BACKGROUND_TOOLBAR      equ         40039
-    ID_MENU_TOOLBAR_TEXT       equ         40049
-    ID_TEXT_TOOLBAR            equ         40050
+    IDI_PAINTER                equ         101
+    IDI_ERASER                 equ         102
+    IDI_PENCIL                 equ         103
+    IDC_ERASER                 equ         104
+    IDC_PENCIL                 equ         105
+    IDB_OPEN                   equ         106
+    IDB_SAVE                   equ         107
+    IDB_ERASER                 equ         108
+    IDB_PENCIL                 equ         109
+    IDR_TOOLBAR                equ         110
+    IDR_ACCELERATOR            equ         111
+    IDD_DIALOG                 equ         112
+    IDC_TEXT                   equ         113
+    IDC_EDIT                   equ         1001
+    ID_MENU                    equ         40001
+    ID_MENU_TOOLBAR_PENCIL     equ         40002
+    ID_MENU_TOOLBAR_ERASER     equ         40003
+    ID_OPEN_TOOLBAR            equ         40004
+    ID_SAVE_TOOLBAR            equ         40005
+    ID_PENCIL_TOOLBAR          equ         40006
+    ID_ERASER_TOOLBAR          equ         40007
+    ID_TEXT_TOOLBAR            equ         40008
+    ID_MENU_FILE_OPEN          equ         40009
+    ID_MENU_FILE_SAVE          equ         40010
+    ID_MENU_TOOLBAR_PALETTE_FOREGROUND equ 40011
+    ID_MENU_TOOLBAR_PALETTE_BACKGROUND equ 40012
+    ID_MENU_TOOLBAR_TEXT       equ         40013
+    ID_FOREGROUND_TOOLBAR      equ         40014
+    ID_BACKGROUND_TOOLBAR      equ         40015
 
     STATUSBAR_SIZE_ID          equ         1
     STATUSBAR_TOOL_ID          equ         2
