@@ -107,6 +107,9 @@ CVSLButtonDown proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
             mov currentFont, eax
         .ENDIF
         invoke DialogBoxParam,hInstance,IDD_DIALOG,hWndMainWindow,offset DialogProc,0
+        .IF eax!=IDOK
+            ret
+        .ENDIF
         invoke GetDC,hWnd
         mov hdc,eax
         invoke CreateCompatibleDC,hdc
