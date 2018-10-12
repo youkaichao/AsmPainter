@@ -68,6 +68,7 @@ DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
     NumberFormat               byte          "%d",13,10,0
     PositionFormat             byte          "Mouse Position: %d(w) x %d(h)",0
     FilterString               byte          "BitMap(*.bmp)",0,"*.bmp",0
+    BmpExtension               byte          ".bmp",0
 
     PencilStatus               byte          "Pencil",0
     EraserStatus               byte          "Eraser",0

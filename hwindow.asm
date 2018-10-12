@@ -117,6 +117,7 @@ WNDSaveFile proc USES edx ebx hWnd:HWND
     local dwSizeofDIB:dword
     local dwBytesWritten:dword
     local rcClient:RECT
+    local filenameLen:dword
     extern hInstance:HINSTANCE
 
     mov  ofn.lStructSize,SIZEOF ofn
@@ -131,6 +132,17 @@ WNDSaveFile proc USES edx ebx hWnd:HWND
     .IF (!eax)
         ret
     .ENDIF
+
+    invoke crt_strlen, offset fileNameBuffer
+    mov filenameLen, eax
+    mov ebx, offset fileNameBuffer
+    add ebx, filenameLen
+    sub  ebx, 4
+    invoke crt_strcmp, ebx, offset BmpExtension
+    .if eax != 0
+    add ebx, 4
+    invoke crt_strcpy, ebx, offset BmpExtension
+    .endif
 
     invoke GetDC,hWndCanvas
     mov hdc,eax
