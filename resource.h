@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ …˙≥…µƒ∞¸∫¨Œƒº˛°£
-// π© Project.rc  π”√
+// Microsoft Visual C++ ÁîüÊàêÁöÑÂåÖÂê´Êñá‰ª∂„ÄÇ
+// ‰æõ Project.rc ‰ΩøÁî®
 //
 #define IDI_PAINTER                     101
 #define IDI_ERASER                      102
@@ -31,13 +31,15 @@
 #define ID_MENU_TOOLBAR_TEXT            40013
 #define ID_FOREGROUND_TOOLBAR           40014
 #define ID_BACKGROUND_TOOLBAR           40015
+#define ID_TOOLBAR_FONT                 40016
+#define ID_MENU_TOOLBAR_FONT            40017
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        114
-#define _APS_NEXT_COMMAND_VALUE         40016
+#define _APS_NEXT_COMMAND_VALUE         40018
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

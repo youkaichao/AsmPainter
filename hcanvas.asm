@@ -89,6 +89,7 @@ CVSRender endp
 
 CVSLButtonDown proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern hInstance:HINSTANCE
+    extern currentFont:HFONT
     local hdc:HDC
     local tempDC:HDC
     local tempBitmap:HBITMAP
@@ -101,6 +102,10 @@ CVSLButtonDown proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     mov mousePosition.y,eax
     mov ebx,instruction
     .IF ebx==INSTRUCTION_TEXT
+        .IF currentFont == 0
+            invoke GetStockObject, SYSTEM_FONT
+            mov currentFont, eax
+        .ENDIF
         invoke DialogBoxParam,hInstance,IDD_DIALOG,hWndMainWindow,offset DialogProc,0
         invoke GetDC,hWnd
         mov hdc,eax
@@ -111,6 +116,7 @@ CVSLButtonDown proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
         invoke SelectObject,tempDC,tempBitmap
         invoke BitBlt,tempDC,0,0,SCROLLWIDTH,SCROLLHEIGHT,buffer,0,0,SRCCOPY
         invoke SetBkMode,tempDC,TRANSPARENT
+        invoke SelectObject, tempDC, currentFont
         invoke crt_strlen,offset editText
         invoke TextOut,tempDC,mousePosition.x,mousePosition.y,addr editText,eax
         invoke BitBlt,buffer,0,0,SCROLLWIDTH,SCROLLHEIGHT,tempDC,0,0,SRCCOPY

@@ -6,12 +6,15 @@ include function.inc
 
 public fgColor
 public bgColor
+public currentFont
 
 .data
     fgColor      dword        0
     bgColor      dword        0ffffffh
     acrCustClr   dword        16 dup(0)
     ofn          OPENFILENAME <>
+    logicFont    LOGFONT      <> 
+    currentFont  HFONT        0
 
 .data?
     fileNameBuffer byte 1000 DUP(?)
@@ -239,6 +242,34 @@ WNDSelectColor proc hWnd:HWND,command:dword
     ret
 WNDSelectColor endp
 
+WNDSelectFont proc hWnd:HWND
+    local cc:CHOOSEFONT
+    extern hInstance:HINSTANCE
+
+    mov cc.lStructSize,sizeof cc
+    mov eax,hWnd
+    mov cc.hwndOwner,eax
+    mov cc.hDC, 0
+    push offset logicFont
+    pop cc.lpLogFont
+    mov cc.Flags, 0
+    mov cc.rgbColors, 0
+    mov cc.lCustData, 0
+    mov cc.lpfnHook, 0
+    mov cc.lpTemplateName, 0
+    mov eax,hInstance
+    mov cc.hInstance,eax
+    mov cc.lpszStyle, 0
+    mov cc.nFontType, 0
+    mov cc.nSizeMin, 0
+    mov cc.nSizeMax, 0
+    
+    invoke ChooseFont,addr cc
+    invoke CreateFontIndirect, offset logicFont
+    mov currentFont, eax
+    ret
+WNDSelectFont endp
+
 WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
     extern instruction:dword
     extern hInstance:HINSTANCE
@@ -261,6 +292,8 @@ WNDHandleCommand proc hWnd:HWND,wParam:WPARAM,lParam:LPARAM
         invoke WNDOpenFile,hWnd
     .ELSEIF ebx==ID_MENU_FILE_SAVE || ebx==ID_SAVE_TOOLBAR
         invoke WNDSaveFile,hWnd
+    .ELSEIF ebx==ID_MENU_TOOLBAR_FONT
+        invoke WNDSelectFont,hWnd
     .ENDIF
     mov eax,TRUE
     ret

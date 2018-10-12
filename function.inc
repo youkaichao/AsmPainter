@@ -52,9 +52,10 @@ CVSSetCursor                proto :HWND,:WPARAM,:LPARAM
 WNDFileOpen                 proto :HWND
 WNDFileSave                 proto :HWND
 WNDSelectColor              proto :HWND,:dword
+WNDSelectFont               proto :HWND
 WNDHandleCommand            proto :HWND,:WPARAM,:LPARAM
 WNDLButtonUp                proto :HWND,:WPARAM,:LPARAM
-WNDDrawTextOnStatusBar      proto :dword, :dword
+WNDDrawTextOnStatusBar      proto :dword,:dword
 
 DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
 
@@ -122,6 +123,7 @@ DLGHandleCommand            proto :HWND,:WPARAM,:LPARAM
     ID_MENU_TOOLBAR_TEXT       equ         40013
     ID_FOREGROUND_TOOLBAR      equ         40014
     ID_BACKGROUND_TOOLBAR      equ         40015
+    ID_MENU_TOOLBAR_FONT       equ         40017
 
     STATUSBAR_SIZE_ID          equ         1
     STATUSBAR_TOOL_ID          equ         2
